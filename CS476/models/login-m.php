@@ -1,20 +1,14 @@
 <?php
-    require_once '../dbinfo.php';
+    require_once '../models/model.php';
 
-    class LogInModel {
-
-        private $db;
+    class LogInModel extends Model {
 
         function __construct() {
-            $this->db = new mysqli("localhost", $GLOBALS["DB_NAME"], $GLOBALS["DB_PASS"], $GLOBALS["DB_NAME"]);
-            if ($this->db->connect_error)
-            {
-                die("Connection fail: " . $this->db->connect_error);
-            }
+            parent::__construct();
         }
 
         function __destruct() {
-            $this->db->close();
+            parent::__destruct();
         }
 
         //execute the log in request from mySQL 

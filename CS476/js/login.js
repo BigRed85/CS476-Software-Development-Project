@@ -140,7 +140,7 @@ function SignupValidate(event)
                 isValid = false;
             }
         }
-        else if (elements[i].name == "uname")
+        else if (elements[i].name == "username")
         {
             if (elements[i].value == "")
             {

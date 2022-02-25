@@ -1,21 +1,17 @@
 <?php
-    require_once '../validator.php';
-    require_once '../models/login-m.php';
-    require_once '../globals.php';
+    
+    require_once '../controllers/controller.php';
 
-    class LogInController {
-        private $validate;
-        private $model;
-
+    class LogInController extends Controller {
+        
         function __construct() {
-            $this->validate = new Validator();
-            $this->model = new LogInModel();
+            parent::__construct(); 
         }
 
         //validates, prepares, and executes a log in attempt
         //returns an error message if log in fails
         function login() {
-            
+
             //prepare varribles
             $username = trim($_POST["username"]);
             $password = trim($_POST["password"]);

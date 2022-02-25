@@ -3,10 +3,10 @@
     require_once '../views/login-v.php';
 
     $error = "";
-
+    $html = "../html/login.html";
 
     $controller = new LogInController();
-    $view = new LogInView();
+    $view = new LogInView($html);
 
     if(isset($_POST["signup"]) && $_POST["signup"])
     {
@@ -19,6 +19,6 @@
         $view->setLoginError($error);
     }
 
-    $view->DisplayPage();
+    $view->displayPage();
 
 ?>

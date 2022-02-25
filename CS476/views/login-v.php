@@ -1,28 +1,31 @@
 <?php
+    require_once '../views/view.php';
 
-    class LogInView {
-        private $errorL;
-        private $errorS;
+    class LogInView extends View {
+        private $errorLogIn;
+        private $errorSignUp;
         private $isSignUp;
 
-        function __construct() {
-            $this->errorL = "";
-            $this->errorS = "";
+        function __construct($html_path) {
+            parent::__construct($html_path);
+
+            $this->errorLogIn = "";
+            $this->errorSignUp = "";
             $this->isSignUP = false;
         }
 
         function setLoginError($errorMsg) {
-            $this->errorL = $errorMsg;
+            $this->errorLogIn = $errorMsg;
         }
 
         function setSignupError($errorMsg) {
-            $this->errorS = $errorMsg;
+            $this->errorSignUp = $errorMsg;
             $this->isSignUP = true;
         }
 
-        function DisplayPage() {
-            $errorL = $this->errorL;
-            $errorS = $this->errorS;
+        function displayPage() {
+            $errorLogIn = $this->errorLogIn;
+            $errorSignUp= $this->errorSignUp;
 
             if($this->isSignUp == true)
             {

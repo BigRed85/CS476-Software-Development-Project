@@ -24,7 +24,7 @@
             </header>
 
             <section class="login <?=$hiddenL?>" id="login">
-                <h2>LOGIN: <span class="err_msg2"> <?=$errorL?> </span></h2>
+                <h2>LOGIN: <span class="err_msg2"> <?=$errorLogIn?> </span></h2>
                 <form id="loginForm" action="login.php" method="post">
 
                     <label for="username">User Name:</label>
@@ -43,14 +43,13 @@
 
 
                 <ul>
-                    <li><a href="home.php">Continue as guest</a></li>
                     <li>Don't have an account? <a href="#signup" id="signup_link">Signup</a></li>
                 </ul>
 
             </section>
 
             <section class="login <?=$hiddenS?>" id="signup">
-                <h2>SIGNUP: <span class="err_msg2"> <?=$errorS?> </span></h2>
+                <h2>SIGNUP: <span class="err_msg2"> <?=$errorSignUp?> </span></h2>
                 <form action="login.php" id="signupForm" method="post" enctype="multipart/form-data">
 
                     <label for="email2">*Email:</label>
@@ -97,7 +96,6 @@
                 </form>
 
                 <ul>
-                    <li><a href="home.php">Continue as guest</a></li>
                     <li>Have an account? <a href="#login" id="login_link">Login</a></li>
                 </ul>
 
