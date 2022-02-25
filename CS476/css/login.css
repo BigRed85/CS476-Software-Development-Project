@@ -1,0 +1,77 @@
+#login_page{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 5em auto;
+    min-height: 100vh;
+    
+}
+
+#login_page .login{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    justify-self: center;
+    align-self: center;
+    margin: 5%;
+}
+
+#signupForm{
+    grid-template-columns: 2fr 1fr 2fr;
+}
+
+.login h2{
+    margin-bottom: 0px;
+}
+
+.login form{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 10px;
+    align-items: center;
+    height: auto;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: lightseagreen;
+}
+
+.login form p{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    justify-self: center;
+}
+
+.login form label{
+    grid-column-start: 1;
+    justify-self: right;
+}
+
+.login form a{
+    grid-column-start: 2;
+    justify-self: center;
+}
+
+.login ul{
+    margin: 0;
+    padding: 0;
+    font-size: small;
+}
+
+.login ul li{
+    display: inline;
+    padding:0.2%;
+    margin: 0;
+    border-left: 2px solid black;
+}
+
+.login ul li:first-child{
+    border-width: 0px;
+}
+
+.login form .button{
+    grid-column-start: 2;
+    width:50%;
+    justify-self: center;
+
+}

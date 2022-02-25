@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>Signin</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="stylesheet" type="text/css" href="../css/style.css" />
+        <link rel="stylesheet" type="text/css" href="../css/header.css" />
+        <link rel="stylesheet" type="text/css" href="../css/footer.css" />
+        <link rel="stylesheet" type="text/css" href="../css/login.css" />
+        
+
+        <script type="text/javascript" src="../js/login.js"></script>
+    </head>
+
+    <body>
+        <div id="login_page">
+            <header>
+                <p><img src="film-reel.png" alt="icon"/>Garden Journals</p>
+                
+            </header>
+
+            <section class="login <?=$hiddenL?>" id="login">
+                <h2>LOGIN: <span class="err_msg2"> <?=$errorL?> </span></h2>
+                <form id="loginForm" action="login.php" method="post">
+
+                    <label for="username">User Name:</label>
+                    <input type="text" id="username" name="username" />
+                    <span class="err_msg1"></span>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" />
+                    <span class="err_msg1"></span>
+
+                    <input type="submit" class="button" value="LOGIN" />
+
+                    <input type="hidden" name="login" value="1">
+
+                </form>
+
+
+                <ul>
+                    <li><a href="home.php">Continue as guest</a></li>
+                    <li>Don't have an account? <a href="#signup" id="signup_link">Signup</a></li>
+                </ul>
+
+            </section>
+
+            <section class="login <?=$hiddenS?>" id="signup">
+                <h2>SIGNUP: <span class="err_msg2"> <?=$errorS?> </span></h2>
+                <form action="login.php" id="signupForm" method="post" enctype="multipart/form-data">
+
+                    <label for="email2">*Email:</label>
+                    <input type="text" id="email2" name="email" />
+                    <span class="err_msg"></span>
+
+                    <label for="confe">*Confirm Email:</label>
+                    <input type="text" id="confe" name="confe" />
+                    <span class="err_msg"></span>
+
+                    <label for="pass2">*Password:</label>
+                    <input type="password" id="pass2" name="pass" />
+                    <span class="err_msg"></span>
+
+                    <label for="confp">*Confirm Password:</label>
+                    <input type="password" id="confp" name="confp" />
+                    <span class="err_msg"></span>
+
+                    <label for="uname">*User Name:</label>
+                    <input type="text" id="uname" name="uname" />
+                    <span class="err_msg"></span>
+
+                    <label for="bday">*Birth Day(used for acout security question):</label>
+                    <input type="date" id="bday" name="bday" />
+                    <span class="err_msg"></span>
+
+                    <label for="avatar">Avatar Image:</label>
+                    <input type="file" id="avatar" name="avatar" />
+                    <span class="err_msg"></span>
+
+                    <p>Location information is used for automatic wether data collection:</p>
+
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" />
+                    <span class="err_msg"></span>
+
+                    <label for="prov">Provence:</label>
+                    <input type="text" id="prov" name="prov" />
+                    <span class="err_msg"></span>
+
+                    <input type="submit" class="button" value="SIGNUP" />
+
+                    <input type="hidden" name="signup" value="1">
+                </form>
+
+                <ul>
+                    <li><a href="home.php">Continue as guest</a></li>
+                    <li>Have an account? <a href="#login" id="login_link">Login</a></li>
+                </ul>
+
+                
+
+            </section>
+
+            <footer>
+                <p>Text</p>
+                <ul>
+                    <li><a href="https://validator.w3.org/nu/?doc=http%3A%2F%2Fwww2.cs.uregina.ca%2F%7Eguest20d%2FAssignment3%2Flogin.html">HTML VALIDATION</a> </li>
+                    <li><a href="http://jigsaw.w3.org/css-validator/check/referer">CSS VALIDATION</a></li>
+                </ul>
+            </footer>
+        </div>
+    </body>
+</html>

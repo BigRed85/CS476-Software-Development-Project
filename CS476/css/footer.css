@@ -1,0 +1,27 @@
+footer{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: lightseagreen;
+    border-top-style: solid;
+    border-top-width: 2px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+
+}
+footer *{
+    margin: 0px;
+    padding: 0px;
+}
+footer ul{
+    grid-column-start: 2;
+    justify-self: right;
+}
+
+footer ul li{
+    display: inline;
+    border-left: 2px solid black;
+    padding-left: 2px;
+}

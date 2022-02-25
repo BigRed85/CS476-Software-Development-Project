@@ -1,0 +1,52 @@
+/* SITE WIDE STYLE */
+body{
+    background-color: white;
+    margin: 0;
+}
+
+ul{
+    list-style-type: none;
+}
+
+a:link{
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited{
+    color: darkslateblue;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+h1{
+    padding-left: 20px;
+    text-decoration: underline;
+}
+
+.err_msg, .err_msg1, .err_msg2, .red{
+    color: red;
+}
+
+.red_border{
+    border-color: red;
+}
+
+.justify_right{
+    justify-self: right;
+}
+
+.justify_left{
+    justify-self: left;
+}
+
+.button{
+    background-color: whitesmoke;
+}
+
+.hidden{
+    visibility: hidden;
+    position: absolute;
+}
