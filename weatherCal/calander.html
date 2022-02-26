@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Calander System</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        
+        <script src="jquery-3.6.0.js"></script>
+        <script src="classes.js"></script>
+
+        <script src="getWeather.js"></script>
+        <script src="cal.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="cal.css" />
+
+    </head>
+
+    <body>
+        <div id="cal">
+            <button id="backBtn"><p>Back</p></button>
+            <div id="top">
+                <h1 id="monthName"></h1>
+                <h1 id="yearTop"></h1>
+                <form>
+                    <label for="city">City:</label>
+                    <select name="city" id="city">
+                        <option value="Regina">Regina</option>
+                        <option value="Saskatoon">Saskatoon</option>
+                        <option value="Calgary">Calgary</option>
+                        <option value="Toronto">Toronto</option>
+                        <option value="Vancouver">Vancouver</option>
+                        <option value="Montreal">Montreal</option> 
+                    </select>
+                </form>
+                
+            </div>
+            <button id="frwBtn"><p>Forward</p></button>
+            <div id="month"></div>
+
+        </div>
+    </body>
+
+</html>
