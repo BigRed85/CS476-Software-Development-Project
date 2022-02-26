@@ -13,6 +13,8 @@
             $this->validate = new Validator();
             $this->model = new LogInModel();
         }
+
+        
     }
 
 ?>

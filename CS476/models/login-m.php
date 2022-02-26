@@ -34,7 +34,7 @@
                 $q = "UPDATE CS476_users SET is_logged_in = 1 WHERE user_id = $user_id";
                 $this->db->query("$q"); //no need to secure this
 
-                header("Location: home.php"); 
+                header("Location: main.php"); 
                 exit();
             }
             else
