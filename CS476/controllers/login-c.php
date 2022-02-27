@@ -1,11 +1,13 @@
 <?php
     
     require_once '../controllers/controller.php';
+    require_once '../models/login-m.php';
 
     class LogInController extends Controller {
         
         function __construct() {
             parent::__construct(); 
+            $this->model = new LogInModel();
         }
 
         //validates, prepares, and executes a log in attempt

@@ -10,7 +10,7 @@
 
         function DisplayPage() {
 
-            include $this->html_path;
+            include($this->html_path);
         }
     }
 

@@ -1,13 +1,11 @@
 <?php
 
     require_once '../controllers/controller.php';
-    require_once '../controllers/content-c.php';
     require_once '../models/main-m.php';
     
 
     class MainController extends Controller {
 
-        private $contentController;
         private $user_id;
 
         function __construct($user_id) {
@@ -17,7 +15,7 @@
 
         function ajax_request() {
 
-            $request = $_POST["ajax_request"];
+            $request = $_GET["ajax_request"];
 
             switch ($request) {
                 case 'user': //this will load the user information for populating the header and the sidebar
@@ -25,38 +23,38 @@
                     $to_return = load_user($user_id);
                     break;
                 case 'journal': //loads a new journal -- not sure how important this is.
-                    $journal_id = $_Post["journal_id"];
+                    $journal_id = $_GET["journal_id"];
                     $to_return = load_journal($journal_id);
                     break;
                 case 'journal_page':
-                    $date = $_POST["date"];
-                    $journal_id = $_Post["journal_id"];
+                    $date = $_GET["date"];
+                    $journal_id = $_GET["journal_id"];
                     $to_return = load_journal_page($journal_id, $date);
                     break;
                 case 'expense':
-                    $journal_id = $_Post["journal_id"];
-                    $first = $_Post["first"];
-                    $last = $_Post["last"];
+                    $journal_id = $_GET["journal_id"];
+                    $first = $_GET["first_day"];
+                    $last = $_GET["last_day"];
                     $to_return = load_expense($journal_id, $first, $last);
                     break;
                 case 'manage':
-                    $journal_id = $_Post["journal_id"];
+                    $journal_id = $_GET["journal_id"];
                     $to_return = load_journal_management($journal_id);
                     break;
                 case 'to_do':
-                    $journal_id = $_Post["journal_id"];
-                    $first = $_Post["first"];
-                    $last = $_Post["last"];
+                    $journal_id = $_GET["journal_id"];
+                    $first = $_GET["first_day"];
+                    $last = $_GET["last_day"];
                     $to_return = load_to_do_list($journal_id, $first, $last);
                     break;
                 case 'photo':
-                    $journal_id = $_Post["journal_id"];
-                    $first = $_Post["first"];
-                    $last = $_Post["last"];
+                    $journal_id = $_GET["journal_id"];
+                    $first = $_GET["first_day"];
+                    $last = $_GET["last_day"];
                     $to_return = load_photo_gallery($journal_id, $first, $last);
                     break;
                 case 'create_journal':
-                    $title = $_POST["title"];
+                    $title = $_GET["title"];
                     $user_id = $_SESSION["user_id"];
                     $to_return = create_journal($title, $user_id);
                     break;

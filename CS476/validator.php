@@ -48,12 +48,6 @@
             return true;
         }
 
-        function image($file) {
-
-            //to do!
-            return true;
-        }
-
         //checks that a string contains only ascii chars and is shorter then a given length
         function stringLength($toValidate, $stringLength = null) {
             if ($stringLength != null)

@@ -12,6 +12,6 @@
         exit();
     }
 
-    header("Location: pages/home.php");
+    header("Location: pages/main.php");
 
 ?>

@@ -21,6 +21,7 @@ CREATE TABLE CS476_users (
     city varchar(32),
     prov varchar(32),
     bday date NOT NULL,
+    default_journal_id INT,
     is_logged_in boolean DEFAULT 0,
     PRIMARY KEY(user_id)
 );
@@ -56,8 +57,10 @@ CREATE TABLE CS476_journal_pages (
 
 CREATE TABLE CS476_journal_entries (
     entry_id INT AUTO_INCREMENT,
-    page_id INT,
-    entry_type INT,
+    page_id INT NOT NULL,
+    user_id INT NOT NULL,
+    entry_type ENUM('event', 'note', 'photo'),
+    entry_time DATETIME NOT NULL,
     PRIMARY KEY(entry_id),
     FOREIGN KEY(page_id) REFERENCES CS476_journal_pages(page_id)
 );

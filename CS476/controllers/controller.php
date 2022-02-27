@@ -1,6 +1,5 @@
 <?php
     require_once '../validator.php';
-    require_once '../models/login-m.php';
     require_once '../globals.php';
 
     //base class for the controller
@@ -11,7 +10,6 @@
 
         function __construct() {
             $this->validate = new Validator();
-            $this->model = new LogInModel();
         }
 
         

@@ -38,7 +38,7 @@
                 $hiddenS = "hidden";
             }
 
-            include("../html/login.html");
+            include($this->html_path);
         }
     }
 
