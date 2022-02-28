@@ -1,4 +1,8 @@
 <?php
+/*
+    This script is used for logging the user out.
+    It will destroy the session and return the user to the index (where they will be redirected)
+*/
     require_once '../dbinfo.php';
 
     session_start();

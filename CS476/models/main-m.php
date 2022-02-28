@@ -28,6 +28,7 @@
             if($row = $result->fetch_assoc())
             {
                 $toReturn["user"] = $row;
+
             }
             else
             {
@@ -36,10 +37,10 @@
             }
 
             //request all owned journals
-            $toReturn["owned_journals"] = load_owned_journals($user_id);
+            $toReturn["owned_journals"] = $this->load_owned_journals($user_id);
 
             //request all journals contributed to 
-            $toReturn["journal_contrabutions"] = load_journal_contribute($user_id);
+            $toReturn["journal_contrabutions"] = $this->load_journal_contribute($user_id);
 
             return $toReturn;
         }
@@ -117,21 +118,19 @@
 
         }
 
-        //will crete a new journal with the given title and owned by the given user
+        //will create a new journal with the given title and owned by the given user
         function create_journal($title, $user_id) {
             
             $query = $this->db->prepare('INSERT INTO CS476_journals (title, user_id)
                                     VALUES (? ,?)');
             $query->bind_param("si", $title, $user_id);
-            $query->execute();
-            $result = $query->get_result();
 
-            if($result === false)
+            if($query->execute())
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         
@@ -171,7 +170,7 @@
         function load_to_do_list($journal_id, $first_day, $last_day) {
             $query = $this->db->prepare('SELECT * FROM CS476_reminders
                                     WHERE journal_id = ?
-                                    AND expence_date BETWEEN ? AND ?');
+                                    AND due_by BETWEEN ? AND ?');
             $query->bind_param("iss", $journal_id, $first_day, $last_day);
             $query->execute();
             $result = $query->get_result();

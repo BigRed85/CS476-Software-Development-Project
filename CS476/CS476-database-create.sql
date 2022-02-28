@@ -66,11 +66,11 @@ CREATE TABLE CS476_journal_entries (
 );
 
 CREATE TABLE CS476_event_entries (
-    event_ID INT AUTO_INCREMENT,
+    event_id INT AUTO_INCREMENT,
     entry_id INT,
     event_type ENUM('planted', 'watered', 'weeding', 'fertalized', 'harvested'),
     event_note varchar(100),
-    PRIMARY KEY(event_ID),
+    PRIMARY KEY(event_id),
     FOREIGN KEY(entry_id) REFERENCES CS476_journal_entries(entry_id)
 );
 
@@ -87,7 +87,7 @@ CREATE TABLE CS476_photo_entries (
     entry_id INT,
     journal_id INT, 
     photo_path varchar(256),
-    photo_date date DEFAULT CURRENT_TIMESTAMP,
+    photo_date date,
     PRIMARY KEY(photo_id),
     FOREIGN KEY(entry_id) REFERENCES CS476_journal_entries(entry_id),
     FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id)

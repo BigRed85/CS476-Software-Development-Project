@@ -5,7 +5,9 @@
 
     //regular expressions
     $reg_email = "/^\w+@\w+\.[a-zA-Z]{2,3}$/";
-    $reg_pass = "/^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+={}:;'<,>.?~-]).{8,}$/";
+    $reg_pass = "/^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+={}:;'<,>.?~-])(?!=.*[ ]).{8,}$/";
+        //passwords must have a capital letter, a lowercase letter, a digit, a special char, and no spaces
     $reg_name = "/^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?!.*[!@#$%^&*()_+={}:;'<,>.?~-]).{4,}$/";
+        //user names must have a capital letter, a lowercase letter, a digit, and no special char or spaces
 
 ?>

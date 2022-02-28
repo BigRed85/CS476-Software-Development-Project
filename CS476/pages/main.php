@@ -9,7 +9,7 @@
 
         The ajax requests should be formated as "main.php?ajax_request=" followed by the request type and the important data.
 
-        all ajax request will be in json
+        all ajax request will return in json
 
         The types of ajax requests are as follows: (replace # with the values)
             ajax_request=user
@@ -76,8 +76,6 @@
         $view->create_json($response);
         $view->ajax_response();
         
-        echo("Request ");
-        echo($_GET["ajax_request"]);
         exit();
     }
 

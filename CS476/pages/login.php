@@ -1,4 +1,15 @@
 <?php
+    /*
+        this script will display the log in screen and deal with any log in or sign up requests
+
+        both the log in and the sign up must be done with a POST
+
+        Variables for a log in:
+                login=1
+                username=###
+                password=###
+
+    */
     require_once '../controllers/login-c.php';
     require_once '../views/login-v.php';
 

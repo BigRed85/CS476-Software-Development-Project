@@ -7,12 +7,12 @@
         protected $html_path;
         protected $response;
 
-        function __construct($html_path) {
+        function __construct($html_path = "") {
             $this->html_path = $html_path;
         }
 
         function displayPage() {
-            //virtual
+            include($this->html_path)
         }
 
         //format the given assosicative array into JSON
