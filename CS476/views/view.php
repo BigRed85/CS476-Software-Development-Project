@@ -12,7 +12,7 @@
         }
 
         function displayPage() {
-            include($this->html_path)
+            include($this->html_path);
         }
 
         //format the given assosicative array into JSON

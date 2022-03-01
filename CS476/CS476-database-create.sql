@@ -23,7 +23,9 @@ CREATE TABLE CS476_users (
     bday date NOT NULL,
     default_journal_id INT,
     is_logged_in boolean DEFAULT 0,
-    PRIMARY KEY(user_id)
+    PRIMARY KEY(user_id),
+    UNIQUE (username),
+    UNIQUE (user_id)
 );
 
 CREATE TABLE CS476_journals (

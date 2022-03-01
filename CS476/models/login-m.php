@@ -45,7 +45,10 @@
         }
 
         function signUp($username, $password, $email, $bday, 
-                $avatar = null, $city = null, $prov = null) {
+                $avatar = null, $target_dir = null, $city = null, $prov = null) {
+
+            //create directory for avatar
+            mkdir($target_dir);
 
             //upload image file to the server
             if ($avatar != null && move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatar) == false)

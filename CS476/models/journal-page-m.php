@@ -1,5 +1,4 @@
 <?php
-//TO-DO: add edits and deletes
     require_once '../models/model.php';
 
     class JournalPageModel extends Model {
@@ -12,8 +11,8 @@
         }
 
         //gets the journal_id of the given page
-        function get_journal_id($page_id) {
-            $query = $this->db->prepare('SELECT journal_id FROM CS476_journal_pages 
+        function get_journal_info($page_id) {
+            $query = $this->db->prepare('SELECT * FROM CS476_journal_pages 
                                         WHERE page_id = ?');
             $query->bind_param("i", $page_id);
             $query->execute();
@@ -22,10 +21,27 @@
 
             if ($row = $result->fetch_assoc())
             {
-                return (int) $row["journal_id"];
+                echo($row);
+                return $row;
             }
 
-            return "Error:" . $this->db->error;
+            return false;
+        }
+
+        function get_contributor_list($journal_id) {
+            $query = $this->db->prepare('SELECT user_id FROM CS476_contributors
+                                        WHERE journal_id = ?');
+            $query->bind_param("i", $journal_id);
+            $query->execute();
+            $result = $query->get_result();
+
+            $to_return = array();
+            while($row = $result->fetch_assoc())
+            {
+                $to_return = $row;
+            }
+
+            return $to_return;
         }
 
         //request all entrys that belong to page
@@ -87,6 +103,22 @@
 
         }
 
+        function get_entry_info($entry_id) {
+            $query = $this->db->prepare('SELECT *  
+                        FROM CS476_journal_entries
+                        WHERE entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            $query->execute();
+            $result = $query->get_result();
+
+            if ($row = $result->fetch_assoc())
+            {
+                return $row;
+            }
+
+            return false;
+        }
+
         //add an entry to database and return the entry_id
         //will return an error string if fails
         //will return an int if succeeds 
@@ -100,9 +132,8 @@
             $query = $this->db->prepare('INSERT INTO CS476_journal_entries (page_id, user_id, entry_type, entry_time)
                             VALUES (?, ?, ?, ?)');
             $query->bind_param("iiss", $page_id, $user_id, $type, $time);
-            $query->execute();
 
-            if ($query->get_result() === false)
+            if ( $query->execute())
             {
                 return "Error:" . $this->db->error;
             }
@@ -128,12 +159,14 @@
         //upload photo to server and add photo entry into database
         //returns an empty string if succees 
         //returns an error string if fails
-        function add_photo($file_path, $entry_id, $journal_id) {
+        function add_photo($file_path, $target_dir, $entry_id, $journal_id) {
 
             if ($file_path == null) 
             {
                 return "ERROR: photo did not upload!";
             }
+
+            mkdir($target_dir);
 
             //upload image file to the server
             if ($file_path != null && move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path) == false)
@@ -145,9 +178,8 @@
             $query = $this->db->prepare('INSERT INTO CS476_photo_entries (entry_id, journal_id, photo_path)
                             VALUES (?, ?, ?)');
             $query->bind_param("iis", $entry_id, $journal_id, $file_path);
-            $query->execute();
 
-            if($query->get_result() === true)
+            if($query->execute())
             {
                 return "";
             }
@@ -174,9 +206,8 @@
             $query = $this->db->prepare('INSERT INTO CS476_note_entries (entry_id, note_path)
                             VALUES (?, ?)');
             $query->bind_param("is", $entry_id, $file_path);
-            $query->execute();
 
-            if($query->get_result() === true)
+            if($query->execute())
             {
                 return "";
             }
@@ -192,13 +223,130 @@
             $query = $this->db->prepare('INSERT INTO CS476_event_entries (entry_id, event_type, event_note)
                             VALUES (?, ?, ?)');
             $query->bind_param("iss", $entry_id, $type, $note);
-            $query->execute();
 
-            if($query->get_result() === true)
+            if( $query->execute())
             {
                 return "";
             }
             
+            return "ERROR: " . $this->db->error;
+
+        }
+
+        //deletes a note entry
+        //returns an empty string if successul
+        //returns an error string on fail
+        function delete_note($entry_id) {
+            //get the path to the note file 
+            $query = $this->db->prepare('SELECT CS476_note_entries.note_path  
+                        FROM CS476_note_entries
+                        JOIN CS476_journal_entries
+                        ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
+                        AND CS476_journal_entries.entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            $query->execute();
+            $result = $query->get_result();
+
+            if($row = $result->fetch_assoc())
+            {
+                $note_path = $row["note_path"];
+                unlink($notes_path);//delete the note file 
+            }
+
+            
+            
+
+            //remove the entry from the database
+            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_note_entries
+                                        FROM CS476_journal_entries
+                                        JOIN CS476_note_entries
+                                        ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
+                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            
+            if ($query->execute()) 
+            {
+                return "";
+            }
+            return "ERROR: " . $this->db->error;
+
+
+        }
+
+        function delete_event($entry_id) {
+            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_event_entries
+                                        FROM CS476_journal_entries
+                                        JOIN CS476_event_entries
+                                        ON CS476_journal_entries.entry_id = CS476_event_entries.entry_id
+                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            
+            if ($query->execute()) 
+            {
+                return "";
+            }
+            return "ERROR: " . $this->db->error;
+
+        }
+
+        function delete_photo($entry_id) {
+            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_photo_entries
+                                        FROM CS476_journal_entries
+                                        JOIN CS476_photo_entries
+                                        ON CS476_journal_entries.entry_id = CS476_photo_entries.entry_id
+                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            
+            if ($query->execute()) 
+            {
+                return "";
+            }
+            return "ERROR: " . $this->db->error;
+
+        }
+
+        function edit_note($entry_id, $new_note) {
+            //get the path to the note
+            $query = $this->db->prepare('SELECT CS476_note_entries.note_path  
+                        FROM CS476_note_entries
+                        JOIN CS476_journal_entries
+                        ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
+                        AND CS476_journal_entries.entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            $query->execute();
+            $result = $query->get_result();
+
+            $note_path= "";
+            if($row = $result->fetch_assoc())
+            {
+                $notes_path = $row["note_path"];
+            }
+            else
+            {
+                return "Error: " . $this->db->error;
+            }
+
+            //update the note
+            $file = fopen($notes_path, "w") or die("unable to open file");
+            fwrite($file, $new_note);
+            fclose($file);
+            
+            return "";
+        }
+
+        function edit_event($entry_id, $new_type, $new_note) {
+            $query = $this->db->prepare('UPDATE CS476_journal_entries
+                                        JOIN CS476_event_entries
+                                        ON CS476_journal_entries.entry_id = CS476_event_entries.entry_id
+                                        SET CS476_event_entries.event_type = ?, 
+                                        CS476_event_entries.event_note = ?
+                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query->bind_param("ssi", $new_type, $new_note, $entry_id);
+            
+            if ($query->execute()) 
+            {
+                return "";
+            }
             return "ERROR: " . $this->db->error;
 
         }

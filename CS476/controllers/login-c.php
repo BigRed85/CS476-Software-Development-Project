@@ -59,7 +59,7 @@
             $isValid = true;
             $errorMsg = "";
 
-            $target_dir = $GLOBALS['avatars_directory'];
+            $target_dir = $GLOBALS['avatars_directory'] . "$username/";
             $target_file = $target_dir . basename($_FILES["avatar"]["name"]);
 
             if ($this->validate->username($username) == false || $confe != $email)
@@ -105,7 +105,7 @@
             //call model to make mySQL request
             //if the request fails return error message
             $errorMsg = $this->model->signup($username, $password, $email, $DOB, 
-                                $target_file, $city, $prov);
+                                $target_file, $target_dir, $city, $prov);
             return $errorMsg;
         }
 
