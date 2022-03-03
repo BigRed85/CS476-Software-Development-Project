@@ -24,14 +24,14 @@ CREATE TABLE CS476_users (
     default_journal_id INT,
     is_logged_in boolean DEFAULT 0,
     PRIMARY KEY(user_id),
-    UNIQUE (username),
-    UNIQUE (user_id)
+    UNIQUE (username)
 );
 
 CREATE TABLE CS476_journals (
     journal_id INT AUTO_INCREMENT,
     user_id INT,
     title varchar(80),
+    archived boolean DEFAULT 0,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(journal_id),
     FOREIGN KEY(user_id) REFERENCES CS476_users(user_id)
@@ -43,7 +43,8 @@ CREATE TABLE CS476_contributors (
     journal_id INT,
     PRIMARY KEY(contributor_id),
     FOREIGN KEY(user_id) REFERENCES CS476_users(user_id),
-    FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id)
+    FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id),
+    UNIQUE (user_id, journal_id)
 );
 
 CREATE TABLE CS476_journal_pages (
@@ -143,7 +144,7 @@ CREATE TABLE CS476_seeds (
 CREATE TABLE CS476_reminders (
     reminder_id INT AUTO_INCREMENT,
     journal_id INT,
-    reminder_note varchar(100),
+    reminder_note varchar(40),
     reminder_status boolean DEFAULT 0,
     due_by date,
     PRIMARY KEY(reminder_id),

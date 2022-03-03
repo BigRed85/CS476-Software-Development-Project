@@ -30,6 +30,8 @@ function login_signup_toggle(event)
     event.preventDefault();
 }
 
+//validates the log in form 
+//if the form is invalid then the defualt behavior is prevented.
 function LoginValidate(event)
 {
     
@@ -72,7 +74,8 @@ function LoginValidate(event)
     
 }
 
-
+//validates the signup form.
+//if the form is invalid then the default behavior will be prevented
 function SignupValidate(event)
 {
     var isValid = true;
@@ -148,42 +151,18 @@ function SignupValidate(event)
                 elements[i].classList.add("red_border");
                 isValid = false;
             }
+            else if (regex_name.test(elements[i].value) == false)
+            {
+                err_msg[i].textContent = "Username must be at least 4 characters, and consist of only letters and numbers";
+                elements[i].classList.add("red_border");
+                isValid = false;
+            }
         }
         else if (elements[i].name == "avatar")
         {
             if (elements[i].value == "")
             {
                 err_msg[i].textContent = "Avatar cannot be empty!";
-                elements[i].classList.add("red_border");
-                isValid = false;
-            }
-        }
-        else if (elements[i].name == "fname")
-        {
-            if (elements[i].value == "")
-            {
-                err_msg[i].textContent = "First name cannot be empty!";
-                elements[i].classList.add("red_border");
-                isValid = false;
-            }
-            else if (regex_name.test(elements[i].value) == false)
-            {
-                err_msg[i].textContent = "Names must start with a uppercase, and contain only letters!";
-                elements[i].classList.add("red_border");
-                isValid = false;
-            }
-        }
-        else if (elements[i].name == "lname")
-        {
-            if (elements[i].value == "")
-            {
-                err_msg[i].textContent = "Last name cannot be empty!";
-                elements[i].classList.add("red_border");
-                isValid = false;
-            }
-            else if (regex_name.test(elements[i].value) == false)
-            {
-                err_msg[i].textContent = "Names must start with a uppercase, and contain only letters!";
                 elements[i].classList.add("red_border");
                 isValid = false;
             }

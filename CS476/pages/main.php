@@ -19,33 +19,60 @@
             ajax_request=journal&journal_id=#
                 -returns the information on a journal corrisponding to the joural_id
                 -returns journal info including: id, title, owner id, date created.
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
 
             ajax_request=journal_page&journal_id=#&date=#
                 -returns the information required to diply a journal page
                 -returns date, page_id, weather_high, weather_low, conditions
                 -will NOT return any entrys this must be done from journal_page.php
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
+                - date=(string)
+                    - these are the range of dates 
+                    - the string must be in form 'YYYY-MM-DD'
 
             ajax_request=expense&journal_id=#&first_day=#&last_day=#
                 -returns the expences that belong to a journal between the given days (inclusive)
                 -pass the first and last day of the month to get all expences for that month
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
+                - first _day=(string)
+                - last_day=(string)
+                    - these are the range of dates 
+                    - the string must be in form 'YYYY-MM-DD'
 
             ajax_request=manage&journal_id=#
                 -returns the information required by the journal management
                 -returns a list of all contributors to the journal
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
 
             ajax_request=to_do&journal_id=#&first_day=#&last_day=#
                 -returns all the reminders that have a due by date between the given values
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
+                - first _day=(string)
+                - last_day=(string)
+                    - these are the range of dates 
+                    - the string must be in form 'YYYY-MM-DD'
             
             ajax_request=photo&journal_id=#&first_day=#&last_day=#
                 -returns all the photo entries that have dates between the given values
+                -jouranl_id=(int)
+                    - is the id of the journal you wish to load
+                - first _day=(string)
+                - last_day=(string)
+                    - these are the range of dates 
+                    - the string must be in form 'YYYY-MM-DD'
 
             ajax_request=create_journal&title=#
                 -will create a new journal owned by the current user
                 -will return a list of all journals owned by the current user
-            
-
-
-
+                - title=(string)
+                    - the title of the journal that you wish to create
+                    - this string must have a length of less then 80
+      
     */
     require_once '../validator.php';
     require_once '../controllers/main-c.php';
@@ -85,8 +112,6 @@
         $controller->log_out();
     }
     //if there is no request deisplay the page with todays journal-page
-
-    echo("session valid");
 
     $view->displayPage();
 ?>

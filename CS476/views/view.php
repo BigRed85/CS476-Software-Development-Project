@@ -6,9 +6,11 @@
 
         protected $html_path;
         protected $response;
+        protected $errormsg;
 
         function __construct($html_path = "") {
             $this->html_path = $html_path;
+            $errormsg = "";
         }
 
         function displayPage() {
@@ -23,6 +25,16 @@
         //returns a response to an ajax request
         function ajax_response() {
             echo($this->response);
+        }
+
+        //loads an error message into the view
+        function load_error($errormsg) {
+            $this->errormsg = $errormsg;
+        }
+
+        //returns the error message to the client
+        function return_error_msg() {
+            echo($this->errormsg);
         }
 
     }
