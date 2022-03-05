@@ -54,7 +54,7 @@
         }
 
         //mark an element as incompleate
-        function mark_incompleate($element_id) {
+        function mark_incompleate($reminder_id) {
             $query = $this->db->prepare('UPDATE CS476_reminders
                                         SET reminder_status = 0
                                         WHERE reminder_id = ?');

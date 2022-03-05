@@ -46,7 +46,7 @@
         to mark an item as incompleate:
 
             GET parameters:
-                compleate=1
+                compleate=0
                     - indicates that you wish mark an item as compleate
                 reminder_id=(int)
                     - the id of the item that you wish to mark
@@ -87,7 +87,7 @@
                 $view->return_error_msg(); 
             }
             else
-                echo("");
+                echo("OK");
             exit();
         }
 
@@ -100,7 +100,7 @@
                 $view->return_error_msg(); 
             }
             else
-                echo("");
+                echo("OK");
             exit();
         }
 
@@ -113,7 +113,7 @@
                 $view->return_error_msg(); 
             }
             else
-                echo("");
+                echo("OK");
             exit();
         }
 
@@ -126,7 +126,7 @@
                 $view->return_error_msg(); 
             }
             else
-                echo("");
+                echo("OK");
             exit();
         }
     }

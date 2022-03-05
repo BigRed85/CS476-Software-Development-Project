@@ -11,8 +11,6 @@
         function __construct() {
             $this->validate = new Validator();
         }
-
-        
     }
 
 ?>

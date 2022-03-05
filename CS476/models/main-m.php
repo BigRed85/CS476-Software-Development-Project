@@ -163,6 +163,13 @@
             $query->execute();
             $result = $query->get_result();
             
+            $to_return = array();
+            while ($row = $result->fetch_assoc())
+            {
+                $to_return[] = $row;
+            }
+
+            return $to_return;
 
         }
 

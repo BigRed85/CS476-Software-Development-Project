@@ -47,6 +47,7 @@
         function signUp($username, $password, $email, $bday, 
                 $avatar = null, $target_dir = null, $city = null, $prov = null) {
 
+            
             //create directory for avatar
             mkdir($target_dir);
 
@@ -61,17 +62,13 @@
             $query = $this->db->prepare('INSERT INTO CS476_users (username, email, password, bday, avatar, city, prov)
                             VALUES (?, ?, ?, ?, ?, ?, ?)');
             $query->bind_param("sssssss", $username, $email, $password, $bday, $avatar, $city, $prov);
-            $query->execute();
 
-            if($query->get_result() === true)
+            if($query->execute())
             {
-                header("Location: login.php");
+                //header("Location: login.php");
                 exit();
             }
-            else
-            {
-                return "ERROR: " . $this->db->error;
-            }
+            return "ERROR: " . $this->db->error;
             
 
         }

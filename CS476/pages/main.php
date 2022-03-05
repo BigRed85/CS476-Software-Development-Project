@@ -1,5 +1,7 @@
 <?php
     /*
+        Dustin: I WANT TO REWRITE THIS AS IT IS NOT AS CLEAR AS THE OTHER PAGES INTERFACES.
+
         This will display the defualt main page if no request is made.
 
         There are 2 types of request that can be made: ajax_request and log out request
@@ -14,7 +16,7 @@
         The types of ajax requests are as follows: (replace # with the values)
             ajax_request=user
                 -this loads user information about the currently loged in user
-                -includes user name, city, prov, avatar path, all owned journals, all contributed journals
+                -includes user name, city, prov, avatar path, all owned journals id, all contributed journals id
             
             ajax_request=journal&journal_id=#
                 -returns the information on a journal corrisponding to the joural_id
@@ -111,7 +113,7 @@
     {
         $controller->log_out();
     }
-    //if there is no request deisplay the page with todays journal-page
+    //if there is no request display the page with todays journal-page
 
     $view->displayPage();
 ?>

@@ -1,0 +1,34 @@
+#calender{
+    padding-bottom: 1em;
+}
+
+#cal_month {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+#days-of-week{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.day-of-week{
+    text-align: center;
+}
+
+
+.day{
+    text-align: center;
+    color: #000000;
+    height: 1.5em;  
+    background-color: #ffffff;
+    margin: 2px;
+    border-radius: 10px;
+
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}

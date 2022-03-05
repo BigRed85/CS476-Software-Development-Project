@@ -166,6 +166,19 @@ function SignupValidate(event)
                 elements[i].classList.add("red_border");
                 isValid = false;
             }
+            
+            var fileName = elements[i].value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile!="jpg" && extFile!="jpeg" && extFile!="png")
+            {
+                err_msg[i].textContent = "Only jpg/jpeg and png files are allowed!";
+                elements[i].value = "";  // Reset the input so no files are uploaded
+                isValid = false;
+            }
+            
+
+
         }
         else if (elements[i].name == "bday")
         {

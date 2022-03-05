@@ -66,6 +66,8 @@
     {
         if($controller->add_contributor($_GET["journal_id"], $_GET["add"]) == false)
             $errormsg = "ERROR: could not add contributor";
+        else
+            $errormsg = "OK";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();
@@ -76,6 +78,8 @@
         //remove contributor
         if($controller->remove_contributor($_GET["journal_id"], $_GET["remove"]) == false)
             $errormsg = "ERROR: could not remove contributor";
+        else
+            $errormsg = "OK";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();
@@ -85,6 +89,8 @@
     {
         if($controller->make_read_only($_GET["journal_id"]) == false)
             $errormsg = "ERROR: could not make read only";
+        else
+            $errormsg = "OK";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();
@@ -94,6 +100,8 @@
     {
         if($controller->make_read_write($_GET["journal_id"]) == false)
             $errormsg = "ERROR: could not make read write";
+        else
+            $errormsg = "OK";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();

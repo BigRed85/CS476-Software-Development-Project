@@ -8,12 +8,14 @@
         private $reg_name;
         private $reg_pass;
         private $reg_sl;
+        private $reg_journal_title;
         Private $db;
 
         function __construct($stringLength = 10) {
             $this->reg_email = $GLOBALS["reg_email"];
             $this->reg_pass = $GLOBALS["reg_pass"];
             $this->reg_name = $GLOBALS["reg_name"];
+            $this->reg_journal_title = $GLOBALS["reg_journal_title"];
 
             $this->reg_sl =  "/^[ -~]{1,$stringLength}$/";
 
@@ -28,7 +30,7 @@
             $this->db->close();
         }
 
-
+        //validates an email address to ensure that it is in the correct format 
         function email($email) {
 
             $match = preg_match($this->reg_email, $email);
@@ -40,6 +42,7 @@
 
         }
 
+        //validates a password to ensure that it is in the correct format
         function password($password) {
             
             $match = preg_match($this->reg_pass, $password);
@@ -50,9 +53,10 @@
             return true;
         }
 
+        //validates a username to ensure that it is in the correct format
         function username($username) {
             $match = preg_match($this->reg_name, $username);
-            if ($username == null || $username == "")
+            if ($username == null || $username == "" || $match == false)
             {
                 return false;
             }
@@ -74,6 +78,7 @@
             return true;
         }
 
+        //validates a session, this checks that the user is properly loged in
         function session() {
             //if no session go to login screen
             if(isset($_SESSION["user_id"]) == false)
@@ -95,6 +100,7 @@
             return true;
         }
 
+        //validates that the given user owns the given journal
         function is_owner($user_id, $journal_id) {
             //get owner of journal
             $query = $this->db->prepare('SELECT user_id FROM CS476_journals 
@@ -123,6 +129,7 @@
             
         }
 
+        //validates that the given user is a contributor to the given journal
         function is_contributor($user_id, $journal_id) {
             $query = $this->db->prepare('SELECT user_id FROM CS476_contributors
                                         WHERE journal_id = ?');
@@ -143,5 +150,17 @@
             return false;
 
         }
+
+        //checks that a journal name is in a valid format
+        function journal_title($journal_title) {
+            $match = preg_match($this->reg_journal_title, $journal_title);
+            if ($journal_title == null || $journal_title == "" || $match == false) 
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
     }
 ?>

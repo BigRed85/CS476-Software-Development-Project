@@ -9,6 +9,7 @@
         private $user_id;
 
         function __construct($user_id) {
+            parent::__construct();
             $this->user_id = $user_id;
             $this->model = new MainModel();
         }
@@ -91,10 +92,17 @@
 
         //request the model create a new journal in the database and return the full list of owned journals
         function create_journal($title, $user_id) {
+            //validate the journal title.
+            if ($this->validate->journal_title($title) === false) 
+            {
+                echo("Error could not create journal: invalid title");
+                die();
+            }
+
             if ($this->model->create_journal($title, $user_id) === false)
             {
                 //error
-                echo("Error could not create journal");
+                echo("Error could not create journal.");
                 die();
             }
 

@@ -31,7 +31,7 @@
                 return false;
             }
 
-            $query = $this->db->prepare('INSERT INTO CS476_contributors (jouranl_id, user_id)
+            $query = $this->db->prepare('INSERT INTO CS476_contributors (journal_id, user_id)
                                         VALUES (?, ?)');
             $query->bind_param("ii", $journal_id, $user_id);
             
@@ -70,9 +70,9 @@
             
             if ($query->execute()) 
             {
-                return "";
+                return true;
             }
-            return "ERROR: " . $this->db->error;
+            return false;
         }
 
         //makes a journal read write
@@ -86,9 +86,9 @@
             
             if ($query->execute()) 
             {
-                return "";
+                return true;
             }
-            return "ERROR: " . $this->db->error;
+            return false;
         }
     }
 ?>

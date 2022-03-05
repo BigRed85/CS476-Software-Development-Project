@@ -24,7 +24,8 @@ CREATE TABLE CS476_users (
     default_journal_id INT,
     is_logged_in boolean DEFAULT 0,
     PRIMARY KEY(user_id),
-    UNIQUE (username)
+    UNIQUE (username),
+    UNIQUE (email)
 );
 
 CREATE TABLE CS476_journals (
@@ -34,7 +35,8 @@ CREATE TABLE CS476_journals (
     archived boolean DEFAULT 0,
     creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(journal_id),
-    FOREIGN KEY(user_id) REFERENCES CS476_users(user_id)
+    FOREIGN KEY(user_id) REFERENCES CS476_users(user_id),
+    UNIQUE (user_id, title)
 );
 
 CREATE TABLE CS476_contributors (
@@ -55,7 +57,8 @@ CREATE TABLE CS476_journal_pages (
     weather_low INT,
     conditions varchar(80),
     PRIMARY KEY(page_id),
-    FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id)
+    FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id), 
+    UNIQUE(journal_id, page_date)
 );
 
 CREATE TABLE CS476_journal_entries (
