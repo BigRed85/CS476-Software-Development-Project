@@ -104,6 +104,8 @@
                 }
             }
 
+            
+
             if (file_exists($target_file))
             {
                 $errorMsg = $errorMsg . "Error: File already exits! ";
@@ -115,6 +117,8 @@
             {
                 return $errorMsg;
             }
+
+            
 
             //call model to make mySQL request
             //if the request fails return error message

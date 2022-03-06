@@ -2,7 +2,9 @@
     require_once '../models/model.php';
 
     class JournalPageModel extends Model {
-        function __construct() {
+        $page_id
+
+        function __construct($date) {
             parent::__construct();
         }
 
@@ -11,17 +13,32 @@
         }
 
         //gets the journal_id of the given page
-        function get_journal_info($page_id) {
-            $query = $this->db->prepare('SELECT * FROM CS476_journal_pages 
-                                        WHERE page_id = ?');
-            $query->bind_param("i", $page_id);
+        function get_journal_info($journal_id) {
+            $query = $this->db->prepare('SELECT * FROM CS476_journals 
+                                        WHERE journal_id = ?');
+            $query->bind_param("i", $journal_id);
             $query->execute();
 
             $result = $query->get_result();
 
             if ($row = $result->fetch_assoc())
             {
-                echo($row);
+                return $row;
+            }
+
+            return false;
+        }
+
+        function get_page_id($journal_id, $date) {
+            $query = $this->db->prepare('SELECT page_id FROM CS476_journal_pages 
+                                        WHERE journal_id = ? AND page_date = ?');
+            $query->bind_param("is", $journal_id, $date);
+            $query->execute();
+
+            $result = $query->get_result();
+
+            if ($row = $result->fetch_assoc())
+            {
                 return $row;
             }
 
@@ -44,9 +61,56 @@
             return $to_return;
         }
 
+        //checks if a page exists in the given jouranl on the given day
+        // returns false if no page exists
+        // returns true if the page exists
+        function is_page($journal_id, $date)
+        {
+            $query = $this->db->prepare('SELECT * FROM CS476_journal_pages
+                                        WHERE journal_id = ? AND page_date = ?');
+            $query->bind_param("is", $journal_id, $date);
+            $query->execute();
+            $result = $query->get_result();
+
+            if ($row = $result->fetch_assoc())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        //create a new page in a journal
+        // returns true if success
+        // returns false if failure
+        function create_page($date, $journal_id) {
+            $query = $this->db->prepare('INSERT INTO CS476_journal_pages
+                                        (journal_id, page_date)
+                                        VALUES (?, ?)');
+            $query->bind_param("is", $journal_id, $date);
+            return $query->execute();
+        }
+
         //request all entrys that belong to page
-        function load_page($page_id) {
+        //returns a multi dimensional array
+        function load_page($date, $journal_id) {
             $to_return = array();
+
+            //get page id
+            $query = $this->db->prepare('SELECT page_id FROM CS476_journal_pages
+                                        WHERE page_date = ?');
+            $query->bind_param("s", $date);
+            $query->execute();
+            $result = $query->get_result();
+
+            $page_id;
+            if($row = $result->fetch_assoc())
+            {
+                $page_id = $row["page_id"];
+            }
+            else
+            {
+                return array();  //????? dont know if this is correct!!!  
+            }
 
             //load events 
             $query = $this->db->prepare('SELECT *  
@@ -133,7 +197,7 @@
                             VALUES (?, ?, ?, ?)');
             $query->bind_param("iiss", $page_id, $user_id, $type, $time);
 
-            if ( $query->execute())
+            if ($query->execute() == false)
             {
                 return "Error:" . $this->db->error;
             }

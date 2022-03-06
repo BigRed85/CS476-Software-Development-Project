@@ -25,6 +25,7 @@
                     - is the id of the journal you wish to load
 
             ajax_request=journal_page&journal_id=#&date=#
+                -this is not realy required is better to make a reques on the journal_page.php
                 -returns the information required to diply a journal page
                 -returns date, page_id, weather_high, weather_low, conditions
                 -will NOT return any entrys this must be done from journal_page.php

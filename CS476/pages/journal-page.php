@@ -2,13 +2,19 @@
     /*
     will serve up a journal page information and deal with any ajax requests to add delete or edit journal entries.
 
-    the page_id must be given to get the page
-     get the page_id from main.php?ajax_request=journal_page&journal_id=#&date=#
+    !! I updated this to use a date inseted of page id, this makes the interactions simpler !!
 
     to load a new page use: (replace # with an integer)
-       jouranl_page.php?page_id=#
+       jouranl_page.php?jouranl_id=(int)&date=YYYY-MM-DD
+            - journal_id=(int)
+                - this is the id of the journal being worked on
+            - date=(string)
+                - this is the date of the page being displayed
+                - this should be in the form "YYYY-MM-DD"
 
-    All other ajax request must be done with the POST method
+    this should return a json encoded page with all the entries, if they exist. 
+
+    All other request must be done with the POST method
 
     To add a journal entry:
         
@@ -26,15 +32,18 @@
                 - this specifies the type of event that has been added
                 - it must be one of 'planted', 'watered', 'weeding', 'fertalized', 'harvested'
                     (without the quotes)  
-            page_id=(int)
-                - this is the page that the entry will belong to 
-                - this must be an integer
+            date=(string)
+                - this will identify the page that the entry will belong to 
+                - this must be an string of the format YYYY-MM-DD
+            journal_id=(int)
+                - this will identify the journal that the entry belongs to
+                - must be a integer number
         
         NOTE: the photo will be added via the $_FILE
 
         this should be followed by reloading the journal page to display the new entry.
         
-        In the future i might have this return the new entry 
+        In the future i might have this return the new entry.
         so that it could be added to the page dynamicly.
         
 
@@ -47,9 +56,12 @@
             entry_id=(int)
                 - this is tne id of the entry you wish to delete
                 - this must be an integer
-            page_id=(int)
-                - this is the page that the entry belongs to 
-                - this must be an integer
+            date=(string)
+                - this will identify the page that the entry will belong to 
+                - this must be an string of the format YYYY-MM-DD
+            journal_id=(int)
+                - this will identify the journal that the entry belongs to
+                - must be a integer number
             
 
         if this fails it will return an error string.
@@ -75,9 +87,12 @@
                 - when editing a note the length of the string may be arbitrarily large 
                     (it will be limited by the max POST size, im not sure what this is yet)
                 - this will replace the old values
-            page_id=(int)
-                - this is the page that the entry belongs to 
-                - this must be an integer
+            date=(string)
+                - this will identify the page that the entry will belong to 
+                - this must be an string of the format YYYY-MM-DD
+            journal_id=(int)
+                - this will identify the journal that the entry belongs to
+                - must be a integer number
 
         if this fails it will return an error string.
         if this succeeds then it will return an empty string.
@@ -90,7 +105,6 @@
     require_once '../controllers/journal-page-c.php';
     require_once '../views/view.php';
 
-    
     $validate = new Validator();
 
     session_start();
@@ -102,48 +116,49 @@
         exit();
     }
 
-    $controller;
+    $controller = new JournalPageController();
     $view = new View();
-    $errormsg;
-    
+    $errormsg = "";   
     
     //check for page request:
-    if (isset($_GET["page_id"])) 
+    if (isset($_GET["date"]) && isset($_GET["journal_id"])) 
     {
-        $controller = new JournalPageController($_GET["page_id"]);
-        $page = $controller->load_page($_GET["page_id"]);
-        $view->create_json($page);
+        //init the controller
+        if ($controller->init($_GET["date"], $_GET["journal_id"]) === false) 
+        {
+            $errormsg = "ERROR: permission denied";
+            $view->load_error($errormsg);
+            $view->return_error_msg();
+            exit();
+        }
+        $page = $controller->load_page();
+        $view->create_json($page); 
         $view->ajax_response(); //return the page information as json
         exit();
     }
-    else if(isset($_POST["page_id"]))
+    else if(isset($_POST["date"]) && isset($_POST["journal_id"])) //a post implies that you are createing something 
     {
-        $controller = new JournalPageController($_POST["page_id"]);
+        if ($controller->init($_POST["date"], $_POST["journal_id"]) === false) 
+        {
+            $errormsg = "ERROR: permission denied";
+            $view->load_error($errormsg);
+            $view->return_error_msg();
+            exit();
+        }
     }
-    else 
+    else
     {
-        echo("ERROR: a page id must be given!");
+        $errormsg = "ERROR: journal id and page date must be given!");
+        $view->load_error($errormsg);
+        $view->return_error_msg();
         exit();
     }
 
-
-
     if (isset($_POST["add"]))
     {
-        switch ($_POST["add"]) {
-            case 'photo':
-                $errormsg = $controller->add_photo();
-                break;
-            case 'note':
-                $errormsg = $controller->add_note();
-                break;
-            case 'event':
-                $errormsg = $controller->add_event();
-                break;
-            default:
-                
-                break;
-        }
+        $controller->add_entry($_POST["add"]);
+
+        
     }
 
     if (isset($_POST["delete"]) && $_POST["delete"])
@@ -156,9 +171,7 @@
         $errormsg = $controller->edit_entry($_POST["entry_id"]);
     }
 
-
     $view->load_error($errormsg);
     $view->return_error_msg();
-
 
 ?>

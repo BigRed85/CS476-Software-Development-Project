@@ -1,6 +1,6 @@
 <?php
 
-    $DB_NAME = "";
-    $DB_PASS = "";
+    $DB_NAME = "guest20d";
+    $DB_PASS = "xl55xl55";
 
 ?>

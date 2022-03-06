@@ -5,31 +5,37 @@
 
     class JournalPageController extends Controller {
 
+        private $date;
         private $page_id;
         private $journal_info;
 
 
-        function __construct($page_id) {
+        function __construct($date, $journal_id) {
             parent::__construct();
             $this->model = new JournalPageModel();
-            $this->page_id = $page_id;
+        }
 
-            $journal_info = $this->model->get_journal_info($page_id);
-            echo($journal_info);
-            if ($journal_info == false)
+        //initializes the private variables and checks that the user has permission to the given journal
+        // returns false if the journal does not exist or the user does not have access to it
+        // returns true if the journal exists and the user has access to it
+        function init($date, $journal_id) {
+            $this->date = $date;
+
+            $this->journal_info = $this->model->get_journal_info($journal_id);
+            if ($this->journal_info === false)
             {
-                echo("Error: could not get assosiated journal!");
-                //die(); 
+                //journal does not exist exit
+                return false;
             }
-
-            $this->journal_info = $journal_info;
 
             if ($this->page_permission() === false)
             {
-                echo("ERROR: you do not have access to this journal page");
-                //die();
+                return false;
             }
-           
+
+            $this->page_id = $this->model->get_page_id($journal_id, $date));
+
+            return true;
         }
 
         //loads all entries that belong to the journal page
@@ -37,7 +43,7 @@
         function load_page() {
             
             //if has permission to page then load page
-            return $this->model->load_page($this->page_id);
+            return $this->model->load_page($this->date);
         }
 
         function page_permission() {
@@ -90,6 +96,44 @@
             return false;
         }
 
+
+        function add_entry($type, $journal_id, $user_id)
+        {
+            //check add permisions
+            if ($validate->is_owner($user_id, $journal_id) === false && 
+                $validate->is_contributor($user_id, $journal_id) === false)
+            {
+                return "ERROR: no permision.";
+            }
+
+            //check if page exists
+            //if page does not exist then create page
+            if ($model->is_page($journal_id, $_POST["date"]) === false)
+            {
+                if ($model->create_page($_POST["date"], $journal_id) === false)
+                {
+                    return "ERROR: could not create page!";
+                }
+            }
+
+            //add the apropiate entry
+            switch ($type) {
+                case 'photo':
+                    $errorMsg = $this->add_photo();
+                    break;
+                case 'note':
+                    $errorMsg = $this->add_note();
+                    break;
+                case 'event':
+                    $errorMsg = $this->add_event();
+                    break;
+                default:
+                    return "Must be photo, note, or event";
+                    break;
+            }
+
+            return $errorMsg; //shooud this return a entry id?
+        }
 
         //delete the given entry
         //will return an empty string if the entry has been deleted
@@ -146,6 +190,8 @@
                     return false;
                     break;
             }
+
+            return true;
         }
 
 
@@ -153,17 +199,7 @@
         //returns an error mesage if the upload failed 
         //returns an empty string if the upload works
         function add_photo() {
-            //ask model to make a new entry
-            $user_id = $_SESSION["user_id"];
-
-            $entry_id = $module->add_entry($this->page_id, $user_id, 'photo');
-
-            if (gettype($entry_id) == "string")
-            {
-                return $entry_id; //is an error mesage
-            }
-
-
+            
             //validate the image file
             $isValid = true;
             $errorMsg = "";
@@ -183,11 +219,21 @@
                 $errorMsg = $errorMsg . "Error: File already exits! ";
                 $valid = false;
             }
-
+            
             //if the image file is not valid return error string
             if ($isValid == false)
             {
                 return $errorMsg;
+            }
+
+            //ask model to make a new entry
+            $user_id = $_SESSION["user_id"];
+
+            $entry_id = $module->add_entry($this->date, $user_id, 'photo');
+
+            if (gettype($entry_id) == "string")
+            {
+                return $entry_id; //is an error mesage
             }
 
             //call model to make mySQL request
@@ -210,7 +256,7 @@
             $user_id = $_SESSION["user_id"];
             $note = $_POST["note"];
 
-            $entry_id = $module->add_entry($this->page_id, $user_id, 'note');
+            $entry_id = $module->add_entry($this->date, $user_id, 'note');
 
             if (gettype($entry_id) == "string")
             {
@@ -243,7 +289,7 @@
             $type = $_POST["type"];
             $note = $_POST["note"];
 
-            $entry_id = $module->add_entry($this->page_id, $user_id, 'event');
+            $entry_id = $module->add_entry($this->date, $user_id, 'event');
 
             if (gettype($entry_id) == "string")
             {

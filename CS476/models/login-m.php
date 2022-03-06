@@ -65,7 +65,7 @@
 
             if($query->execute())
             {
-                //header("Location: login.php");
+                header("Location: login.php");
                 exit();
             }
             return "ERROR: " . $this->db->error;

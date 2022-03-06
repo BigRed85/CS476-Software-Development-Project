@@ -29,7 +29,6 @@
         $error = $controller->login();
         $view->setLoginError($error);
     }
-
     $view->displayPage();
 
 ?>
