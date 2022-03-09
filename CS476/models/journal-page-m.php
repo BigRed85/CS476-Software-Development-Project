@@ -2,9 +2,8 @@
     require_once '../models/model.php';
 
     class JournalPageModel extends Model {
-        $page_id
 
-        function __construct($date) {
+        function __construct() {
             parent::__construct();
         }
 
@@ -17,22 +16,6 @@
             $query = $this->db->prepare('SELECT * FROM CS476_journals 
                                         WHERE journal_id = ?');
             $query->bind_param("i", $journal_id);
-            $query->execute();
-
-            $result = $query->get_result();
-
-            if ($row = $result->fetch_assoc())
-            {
-                return $row;
-            }
-
-            return false;
-        }
-
-        function get_page_id($journal_id, $date) {
-            $query = $this->db->prepare('SELECT page_id FROM CS476_journal_pages 
-                                        WHERE journal_id = ? AND page_date = ?');
-            $query->bind_param("is", $journal_id, $date);
             $query->execute();
 
             $result = $query->get_result();
@@ -80,7 +63,7 @@
         }
 
         //create a new page in a journal
-        // returns true if success
+        // returns page_id if success
         // returns false if failure
         function create_page($date, $journal_id) {
             $query = $this->db->prepare('INSERT INTO CS476_journal_pages
@@ -90,6 +73,22 @@
             return $query->execute();
         }
 
+        //returns the page id of the page with the given journal id and date
+        function get_page_id($date, $journal_id) {
+            $query = $this->db->prepare('SELECT page_id FROM CS476_journal_pages
+                                        WHERE journal_id = ? AND page_date = ?');
+            $query->bind_param("is", $journal_id, $date);
+            $query->execute();
+            $result = $query->get_result();
+
+            if ($row = $result->fetch_assoc())
+            {
+                return $row["page_id"];
+            }
+            return false;
+
+        }
+
         //request all entrys that belong to page
         //returns a multi dimensional array
         function load_page($date, $journal_id) {
@@ -97,8 +96,8 @@
 
             //get page id
             $query = $this->db->prepare('SELECT page_id FROM CS476_journal_pages
-                                        WHERE page_date = ?');
-            $query->bind_param("s", $date);
+                                        WHERE page_date = ? AND journal_id = ?');
+            $query->bind_param("si", $date, $journal_id);
             $query->execute();
             $result = $query->get_result();
 
@@ -109,7 +108,7 @@
             }
             else
             {
-                return array();  //????? dont know if this is correct!!!  
+                return array();  
             }
 
             //load events 
@@ -188,6 +187,8 @@
         //will return an int if succeeds 
         function add_entry($page_id, $user_id, $type) {
 
+            //get page id
+
             //get the current time
             $datum = new DateTime();
             $time = $datum->format('Y-m-d H:i:s');
@@ -197,7 +198,7 @@
                             VALUES (?, ?, ?, ?)');
             $query->bind_param("iiss", $page_id, $user_id, $type, $time);
 
-            if ($query->execute() == false)
+            if ($query->execute() === false)
             {
                 return "Error:" . $this->db->error;
             }
@@ -233,7 +234,7 @@
             mkdir($target_dir);
 
             //upload image file to the server
-            if ($file_path != null && move_uploaded_file($_FILES["avatar"]["tmp_name"], $file_path) == false)
+            if ($file_path != null && move_uploaded_file($_FILES["photo"]["tmp_name"], $file_path) == false)
             {
                 return "ERROR: photo did not upload!";
             }
@@ -314,58 +315,93 @@
             if($row = $result->fetch_assoc())
             {
                 $note_path = $row["note_path"];
-                unlink($notes_path);//delete the note file 
+                unlink($note_path);//delete the note file 
             }
-
-            
-            
 
             //remove the entry from the database
-            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_note_entries
-                                        FROM CS476_journal_entries
-                                        JOIN CS476_note_entries
-                                        ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
-                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query = $this->db->prepare('DELETE FROM CS476_note_entries
+                                        WHERE entry_id = ?');
             $query->bind_param("i", $entry_id);
-            
-            if ($query->execute()) 
+            if ($query->execute() == false) 
             {
-                return "";
+                
+                return "ERROR: " . $this->db->error;
             }
-            return "ERROR: " . $this->db->error;
+           
 
+            $query = $this->db->prepare('DELETE FROM CS476_journal_entries
+                                        WHERE entry_id = ?');
+            $query->bind_param("i", $entry_id);            
+            if ($query->execute() == false) 
+            {
+                
+                return "ERROR: " . $this->db->error;
+            }
+            return "";
 
         }
 
         function delete_event($entry_id) {
-            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_event_entries
-                                        FROM CS476_journal_entries
-                                        JOIN CS476_event_entries
-                                        ON CS476_journal_entries.entry_id = CS476_event_entries.entry_id
-                                        WHERE CS476_journal_entries.entry_id = ?');
+            $query = $this->db->prepare('DELETE FROM CS476_event_entries
+                                        WHERE entry_id = ?');
             $query->bind_param("i", $entry_id);
-            
-            if ($query->execute()) 
+            if ($query->execute() == false) 
             {
-                return "";
+                
+                return "ERROR: " . $this->db->error;
             }
-            return "ERROR: " . $this->db->error;
+            
+
+            $query = $this->db->prepare('DELETE FROM CS476_journal_entries
+                                        WHERE entry_id = ?');
+            $query->bind_param("i", $entry_id);            
+            if ($query->execute() == false) 
+            {
+                
+                return "ERROR: " . $this->db->error;
+            }
+            return "";
 
         }
 
         function delete_photo($entry_id) {
-            $query = $this->db->prepare('DELETE CS476_journal_entries, CS476_photo_entries
-                                        FROM CS476_journal_entries
-                                        JOIN CS476_photo_entries
-                                        ON CS476_journal_entries.entry_id = CS476_photo_entries.entry_id
-                                        WHERE CS476_journal_entries.entry_id = ?');
+            //get photo path then delete
+
+            $query = $this->db->prepare('SELECT CS476_photo_entries.photo_path  
+                        FROM CS476_photo_entries
+                        JOIN CS476_journal_entries
+                        ON CS476_journal_entries.entry_id = CS476_photo_entries.entry_id
+                        AND CS476_journal_entries.entry_id = ?');
             $query->bind_param("i", $entry_id);
-            
-            if ($query->execute()) 
+            $query->execute();
+            $result = $query->get_result();
+
+            if($row = $result->fetch_assoc())
             {
-                return "";
+                $photo_path = $row["photo_path"];
+                unlink($photo_path);//delete the note file 
             }
-            return "ERROR: " . $this->db->error;
+
+            //remove the entry from the database
+            $query = $this->db->prepare('DELETE FROM CS476_photo_entries
+                                        WHERE entry_id = ?');
+            $query->bind_param("i", $entry_id);
+            if ($query->execute() == false) 
+            {
+                
+                return "ERROR: " . $this->db->error;
+            }
+            
+
+            $query = $this->db->prepare('DELETE FROM CS476_journal_entries
+                                        WHERE entry_id = ?');
+            $query->bind_param("i", $entry_id);            
+            if ($query->execute() == false) 
+            {
+                
+                return "ERROR: " . $this->db->error;
+            }
+            return "";
 
         }
 

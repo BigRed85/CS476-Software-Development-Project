@@ -39,7 +39,7 @@
                 - this will identify the journal that the entry belongs to
                 - must be a integer number
         
-        NOTE: the photo will be added via the $_FILE
+        NOTE: the photo will be added via $_FILE["photo"]
 
         this should be followed by reloading the journal page to display the new entry.
         
@@ -87,9 +87,8 @@
                 - when editing a note the length of the string may be arbitrarily large 
                     (it will be limited by the max POST size, im not sure what this is yet)
                 - this will replace the old values
-            date=(string)
-                - this will identify the page that the entry will belong to 
-                - this must be an string of the format YYYY-MM-DD
+            entry_id=(int)
+                - this will identify the entry to edit 
             journal_id=(int)
                 - this will identify the journal that the entry belongs to
                 - must be a integer number
@@ -148,7 +147,7 @@
     }
     else
     {
-        $errormsg = "ERROR: journal id and page date must be given!");
+        $errormsg = "ERROR: journal id and page date must be given!";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();
@@ -156,9 +155,7 @@
 
     if (isset($_POST["add"]))
     {
-        $controller->add_entry($_POST["add"]);
-
-        
+        $errormsg = $controller->add_entry($_POST["add"], $_POST["journal_id"], $_SESSION["user_id"]);      
     }
 
     if (isset($_POST["delete"]) && $_POST["delete"])

@@ -93,7 +93,7 @@ CREATE TABLE CS476_photo_entries (
     entry_id INT,
     journal_id INT, 
     photo_path varchar(256),
-    photo_date date,
+    photo_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(photo_id),
     FOREIGN KEY(entry_id) REFERENCES CS476_journal_entries(entry_id),
     FOREIGN KEY(journal_id) REFERENCES CS476_journals(journal_id)

@@ -10,7 +10,7 @@
         private $journal_info;
 
 
-        function __construct($date, $journal_id) {
+        function __construct() {
             parent::__construct();
             $this->model = new JournalPageModel();
         }
@@ -33,8 +33,7 @@
                 return false;
             }
 
-            $this->page_id = $this->model->get_page_id($journal_id, $date));
-
+            $this->page_id = $this->model->get_page_id($journal_id, $date);
             return true;
         }
 
@@ -43,7 +42,7 @@
         function load_page() {
             
             //if has permission to page then load page
-            return $this->model->load_page($this->date);
+            return $this->model->load_page($this->date, $this->journal_info["journal_id"]);
         }
 
         function page_permission() {
@@ -75,7 +74,7 @@
                     return true;
             }
 
-            if ($journal_info["user_id"] == $_SESSION["user_id"])
+            if ($this->journal_info["user_id"] == $_SESSION["user_id"])
             {
                 return true;
             }
@@ -100,32 +99,35 @@
         function add_entry($type, $journal_id, $user_id)
         {
             //check add permisions
-            if ($validate->is_owner($user_id, $journal_id) === false && 
-                $validate->is_contributor($user_id, $journal_id) === false)
+            if ($this->validate->is_owner($user_id, $journal_id) === false && 
+                $this->validate->is_contributor($user_id, $journal_id) === false)
             {
                 return "ERROR: no permision.";
             }
 
             //check if page exists
             //if page does not exist then create page
-            if ($model->is_page($journal_id, $_POST["date"]) === false)
+            if ($this->model->is_page($journal_id, $_POST["date"]) === false)
             {
-                if ($model->create_page($_POST["date"], $journal_id) === false)
+                if ($this->model->create_page($_POST["date"], $journal_id) === false)
                 {
                     return "ERROR: could not create page!";
                 }
             }
 
+            //get page id
+            $page_id = $this->model->get_page_id($_POST["date"], $journal_id);
+
             //add the apropiate entry
             switch ($type) {
                 case 'photo':
-                    $errorMsg = $this->add_photo();
+                    $errorMsg = $this->add_photo($page_id);
                     break;
                 case 'note':
-                    $errorMsg = $this->add_note();
+                    $errorMsg = $this->add_note($page_id);
                     break;
                 case 'event':
-                    $errorMsg = $this->add_event();
+                    $errorMsg = $this->add_event($page_id);
                     break;
                 default:
                     return "Must be photo, note, or event";
@@ -148,6 +150,11 @@
             //delete the entry
             $entry_info = $this->model->get_entry_info($entry_id);
 
+            if ($entry_info === false)
+            {
+                return "ERROR: entry $entry_id does not exist!";
+            }
+            
             switch ($entry_info["entry_type"]) {
                 case 'event':
                     return $this->delete_event($entry_id);
@@ -173,38 +180,39 @@
             }
 
             //edit the entry
-            $type = $_POST["edit"];
+            $edit = $_POST["edit"];
 
-            switch ($type) {
+
+            switch ($edit) {
                 case 'event':
                     
-                    $this->edit_event($entry_id, $new_type, $new_note);
+                    $errorMsg = $this->edit_event($entry_id, $_POST["type"], $_POST["note"]);
                     break;
                 case 'note':
-                    $this->edit_note($entry_id, $new_note);
+                    $errorMsg = $this->edit_note($entry_id, $_POST["note"]);
                     break;
                 case 'photo':
-                    return false; //there is no edit behavior for photos
+                    return "Error: cannot edit a photo!"; //there is no edit behavior for photos
                     break;
                 default:
-                    return false;
+                    return "Error: must be a event or note!"; 
                     break;
             }
 
-            return true;
+            return $errorMsg;
         }
 
 
         //uploads a photo to the server
         //returns an error mesage if the upload failed 
         //returns an empty string if the upload works
-        function add_photo() {
+        function add_photo($page_id) {
             
             //validate the image file
-            $isValid = true;
+            $valid = true;
             $errorMsg = "";
 
-            $target_dir = $GLOBALS['photos_directory'] . "$user_id/";
+            $target_dir = $GLOBALS['photos_directory'] . "$page_id/";
             $target_file = $target_dir . basename($_FILES["photo"]["name"]);
 
             $check = getimagesize($_FILES["photo"]["tmp_name"]);
@@ -216,12 +224,13 @@
 
             if (file_exists($target_file))
             {
+                
                 $errorMsg = $errorMsg . "Error: File already exits! ";
                 $valid = false;
             }
             
             //if the image file is not valid return error string
-            if ($isValid == false)
+            if ($valid == false)
             {
                 return $errorMsg;
             }
@@ -229,7 +238,7 @@
             //ask model to make a new entry
             $user_id = $_SESSION["user_id"];
 
-            $entry_id = $module->add_entry($this->date, $user_id, 'photo');
+            $entry_id = $this->model->add_entry($page_id, $user_id, 'photo');
 
             if (gettype($entry_id) == "string")
             {
@@ -239,7 +248,7 @@
             //call model to make mySQL request
             //if the request fails return error message
             //if the request succeeds then return empty string
-            $errorMsg = $this->model->add_photo($target_file, $target_dir, $entry_id, $this->journal_id);
+            $errorMsg = $this->model->add_photo($target_file, $target_dir, $entry_id, $this->journal_info["journal_id"]);
             return $errorMsg;
         }
 
@@ -251,12 +260,12 @@
         //uploads a note to the server
         //returns an error mesage if the upload failed 
         //returns an empty string if the upload works
-        function add_note($note) {
+        function add_note($page_id) {
             //ask model to make a new entry
             $user_id = $_SESSION["user_id"];
             $note = $_POST["note"];
 
-            $entry_id = $module->add_entry($this->date, $user_id, 'note');
+            $entry_id = $this->model->add_entry($page_id, $user_id, 'note');
 
             if (gettype($entry_id) == "string")
             {
@@ -282,26 +291,26 @@
         //uploads a event to the server
         //returns an error mesage if the upload failed 
         //returns an empty string if the upload works
-        function add_event() {
+        function add_event($page_id) {
 
             //ask model to make a new entry
             $user_id = $_SESSION["user_id"];
             $type = $_POST["type"];
             $note = $_POST["note"];
 
-            $entry_id = $module->add_entry($this->date, $user_id, 'event');
+            $entry_id = $this->model->add_entry($page_id, $user_id, 'event');
 
             if (gettype($entry_id) == "string")
             {
                 return $entry_id; //is an error mesage
             }
 
-            return $this->model->add_event($type, $note);
+            return $this->model->add_event($type, $note, $entry_id);
 
         }
 
         function delete_event($entry_id) {
-            return $this->modle->delete_event($entry_id);
+            return $this->model->delete_event($entry_id);
         }
 
         function edit_event($entry_id) {
