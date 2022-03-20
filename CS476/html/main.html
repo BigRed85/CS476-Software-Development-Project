@@ -5,20 +5,437 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garden Journals</title>
+    <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!--custom style sheets-->
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="../css/calender.css" />
+    <link rel="stylesheet" type="text/css" href="../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="../css/journal-page.css" />
+    <link rel="stylesheet" type="text/css" href="../css/to_do_list.css" />
+
+    <!--JavaScript-->
+    <!--calender-->
+    <script type="text/javascript" src="../js/cal/classes.js"></script>
+    <script type="text/javascript" src="../js/cal/cal.js"></script>
+
+    <!--Open Weaterh API-->
+    <script src="../js/cal/getWeather.js"></script>
+    
+    <!--main-->
+    <script src="../js/main/model.js"></script> <!--contains the javascript that will load and store information-->
+    <script src="../js/main/view.js"></script> <!--contains the javascript that deals with the presentation layer-->
+    <script src="../js/main/contorller.js"></script> <!--contains the code that will deal with the logic and event listeners-->
+
+    <!--main JavaScript-->
+    <script src="../js/main/main.js"></script>
 </head>
 <body>
-    <header class="row">
 
+    <header>
+        <a href="../index.php" id="icon"><img src="../html/Gecko4.jpg" alt="icon"/>Online Garden Journals</a>
+        
+        <a id="logout" href="../pages/logout.php">Log Out</a>
+        <img src=<?=$avatar?> alt="profPic" class="profile_picture" />
+        <p id="user_name"><?=$uname?></p>
     </header>
 
-    <div>
+    
+    <div class="container-fluid" id="main">
+
+        <div class="row flex-nowarp">
+            <div class="col-auto col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div id="sidebar" class="d-flex flex-column align-items-sm-start px-3 pt-2 text-white">
+                    <div class="align-self-center"><h3><span class="current_journal_title">Current Journal</span></h3></div>
+                    <div class="align-self-center" id="calender">
+                        <div class="d-flex flex-nowarp">
+                            <button class="flex-fill btn btn-dark btn-sm" id="cal_month_back">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                </svg>
+                            </button>
+
+                            <button class="flex-fill btn btn-dark btn-sm" id="cal_month_name" onclick="this.blur();">Mar.</button>
+                            <button class="flex-fill btn btn-dark btn-sm" id="cal_year" onclick="this.blur();">2022</button>
+
+                            <button class="flex-fill btn btn-dark btn-sm" id="cal_month_forward">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="days-of-week">
+                            <div class="day-of-week">Su</div>
+                            <div class="day-of-week">Mo</div>
+                            <div class="day-of-week">Tu</div>
+                            <div class="day-of-week">We</div>
+                            <div class="day-of-week">Th</div>
+                            <div class="day-of-week">Fr</div>
+                            <div class="day-of-week">Sa</div> 
+                        </div>
+                        <div id="cal_month">
+
+                        </div>
+                        
+                    </div>
+                    
+                    <br />
+
+                    <div class="btn-group-vertical align-self-center">
+                        <div class="btn-group dropend">
+                            <button id="select_joural_button" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                              SELECT JOURNAL
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow">
+
+                                <li><h5 class="dropdown-header">Journals Owned:</h5></li> 
+                                <span id="owned_journal_list">
+                                    <li><a value="1" class="dropdown-item journal_selector" href="#">Link 1</a></li>
+                                    <li><a class="dropdown-item journal_selector" href="#">Link 2</a></li>
+                                </span>
+
+                                <li><h5 class="dropdown-header">Journals Contributing To:</h5></li> 
+                                <span id="contrib_journal_list">
+                                </span>
+                                <li><hr class="dropdown-divider"></hr></li> 
+                                <li><a id="create_journal_button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new_journal_modal">CREATE A NEW JOURNAL</a></li>
+                            </ul>
+                        </div>
+                        <button id="To_Do_button" type="button" class="btn btn-secondary" onclick="this.blur();">To-Do List</button>
+                        <button id="Photo_button" type="button" class="btn btn-secondary" onclick="this.blur();">Photo Gallary</button>
+                        <button id="Manage_button" type="button" class="btn btn-secondary" onclick="this.blur();">Manage Journal</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="content" class="col py=3">
+                <div id="content-journal-page" class="card">
+                    <div class="card-header">
+                        <div id="page_header">
+                            <h4>Date: <span id="journal-page-date"></span> </h4>
+                            <h5>Weather: <span id="journal_page_weather"></span></h5>
+                            <div class="btn-group" id="add_entry_button">
+                                <button id="add_event" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add_event_modal">Add Event</button>
+                                <button id="add_note" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add_note_modal">Add Note</button>
+                                <button id="add_photo" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add_photo_modal">Add Photo</button>
+                              </div> 
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="journal-page-entries"></div> <!--this is where the journal entries for the curretn date will be displayed-->
+                    </div>
+
+                    <!-- The Edit Event Modal -->
+                    <div class="modal" id="edit_event_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Edit Event</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <label for="event_type">Type</label>
+                                    <form id="edit_event_form">
+                                        <select name="type" id="edit_event_type">
+                                            <option value="planted">Planted</option>
+                                            <option value="watered">Watered</option>
+                                            <option value="weeding">Weeded</option>
+                                            <option value="fertalized">Fertalized</option>
+                                            <option value="harvested">Harvested</option>
+                                        </select>
+                                        <br>
+                                        <label for="note">A short note or description:</label><br>
+                                        <input type="text" name="note" id="edit_event_note">
+                                        <input type="hidden" name="edit" value="event">
+                                        <input type="hidden" name="entry_id" value="" id="edit_event_id">
+                                        <br>
+                                        <input type="submit" value="Submit">
+                                    </form> 
+
+                                    <br>
+                                    <div id="edit_event_success" class="alert alert-success hidden">Success!</div>
+                                    <div id="edit_event_fail" class="alert alert-danger hidden">Failed to create journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <!-- The Add Event Modal -->
+                    <div class="modal" id="add_event_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Add New Event</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <label for="event_type">Type</label>
+                                    <form id="add_event_form">
+                                        <select name="type" id="event_type">
+                                            <option value="planted">Planted</option>
+                                            <option value="watered">Watered</option>
+                                            <option value="weeding">Weeded</option>
+                                            <option value="fertalized">Fertalized</option>
+                                            <option value="harvested">Harvested</option>
+                                        </select>
+                                        <br>
+                                        <label for="note">A short note or description:</label><br>
+                                        <input type="text" name="note" id="event_note">
+                                        <br>
+                                        <input type="submit" value="Submit">
+                                    </form> 
+
+                                    <br>
+                                    <div id="new_event_success" class="alert alert-success hidden">Success!</div>
+                                    <div id="new_event_fail" class="alert alert-danger hidden">Failed to create journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- The Edit Note Modal -->
+                    <div class="modal" id="edit_note_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Edit Note</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form id="edit_note_form">
+                                    <lable for="note_text">Enter text for a journal entry: </lable>
+                                    <textarea name="note" id="edit_note_text" cols="45" rows="10"></textarea>
+                                    <input type="hidden" name="edit" value="note">
+                                    <input type="hidden" name="entry_id" value="" id="edit_note_id">
+                                    <br>
+                                    <input type="submit" value="Submit">                                     
+                                </form>
+                                <br>
+                                <div id="new_note_success" class="alert alert-success hidden">Success!</div>
+                                <div id="new_note_fail" class="alert alert-danger hidden">Failed to create journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- The Add Note Modal -->
+                    <div class="modal" id="add_note_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Add New Note</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form id="add_note_form">
+                                    <lable for="note_text">Enter text for a journal entry: </lable>
+                                    <textarea name="note" id="note_text" cols="45" rows="10"></textarea>
+                                    <br>
+                                    <input type="submit" value="Submit">                                     
+                                </form>
+                                <br>
+                                <div id="new_note_success" class="alert alert-success hidden">Success!</div>
+                                <div id="new_note_fail" class="alert alert-danger hidden">Failed to create journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- The Add Photo Modal -->
+                    <div class="modal" id="add_photo_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Add New Photo</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form id="add_photo_form">
+                                    <label for="photo_file"></label>
+                                    <input type="file" accept=".jpg,.jpeg,.png" name="photo" id="photo_file">
+                                    <input type="submit" value="Submit">
+
+                                </form>
+                                <br>
+                                <div id="new_photo_success" class="alert alert-success hidden">Success!</div>
+                                <div id="new_photo_fail" class="alert alert-danger hidden">Failed to create journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- The Delete Entry Modal -->
+                    <div class="modal" id="delete_modal">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                            <h4 class="modal-title">Delete Entry:</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <p>Are you sure you wish to delete this entry?</p>
+                                <form id="delete_form">
+                                    <input type="hidden" name="entry_id" value="">
+                                    <input type="submit" value="Yes">
+                                </form>
+                                <br>
+                                <div id="delete_success" class="alert alert-success hidden">Success!</div>
+                                <div id="delete_fail" class="alert alert-danger hidden">Failed to delete journal entry!</div>
+                            </div>
+                    
+                        </div>
+                        </div>
+                    </div>
+                    
+                </div>                
+                
+                <div id="content-to-do" class="card hidden">
+                    <div class="card-header">
+                        <div id="To-Do-Header">
+                            <h4>To-Do List</h4>
+                            <form id="to-do-dates">
+                                <label for="to_do_first">From:</label>
+                                <input type="date" name="first_day" id="to_do_first">
+                                <br>
+                                <label for="to_do_last">To:</label>
+                                <input type="date" name="last_day" id="to_do_last">
+                            </form>
+                            
+                            <button class="btn btn-secondary">Add Reminder</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>To-Do</th>
+                                <th>Due By</th>
+                                <th>Status</th>
+                                <th>Remove</th>
+                            </tr>
+
+                            <tr>
+                                <td>reminder description</td>
+                                <td>date</td>
+                                <td>
+                                    <label for="finished">Done</label>
+                                    <input type="checkbox" name="finished" id="finished">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                </div>
+                
+                <div id="content-photo" class="hidden">3
+                    
+                </div>
+                
+                <div id="content-journal-manage" class="card hidden">
+                    <div class="card-header">
+                        <h3>Manage Journal: <span class="current_journal_title">Title</span></h3>
+                    </div>
+
+                    <div class="card-body">
+                        <form id="add_contributor_form">
+                            <label for="add_user_name">Add Contributor: </label>
+                            <input type="text" name="add" id="add_user_name">
+                            <input type="submit" value="ADD!">
+                        </form>
+                        <br>
+
+                        <form id="remove_contributor_form">
+                            <label for="remove_user_list">Remove a Contributor: </label>
+                            <select name="remove" id="remove_user_list"></select>
+                            <input type="submit" value="REMOVE!">
+                        </form>
+                        <br>
+
+                        <form id="arcive_journal_from">
+                            <input type="hidden" name="archive" value="1">
+                            <input type="submit" value="Archive this journal.">
+                            <p>This will make it so no user may add or edit the current journal. This may be undone.</p>
+                        </form>
+                        <br>
+
+                        <form id="delete_journal_form">
+                            <input type="hidden" name="delete" value="1">
+                            <input type="submit" value="DELETE this journal!">
+                            <p>This will delete the current journal! WARNING THIS CANNOT BE UNDONE!</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The new journal Modal -->
+        <div class="modal" id="new_journal_modal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Create New Journal</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="new_journal_form">
+                        <label for="title">Title:</label><br>
+                        <input type="text" id="new_title" name="title">
+                        <input type="hidden" name="ajax_request" value="create_journal">
+                        <input type="submit" value="Submit">
+                    </form> 
+                    <br>
+                    <div id="new_journal_success" class="alert alert-success hidden">Success!</div>
+                    <div id="new_journal_fail" class="alert alert-danger hidden">Failed to create journal!</div>
+                </div>
+        
+                
+        
+            </div>
+            </div>
+        </div>
 
     </div>
 
     <footer>
-
+        CS476 Project By Dustin Guest and Mike Roebuck
+        
     </footer>
 </body>
 </html>

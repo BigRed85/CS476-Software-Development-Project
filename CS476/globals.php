@@ -13,7 +13,10 @@
     $reg_name = "/^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?!.*[!@#$%^&*()_+={}:;'<,>.?~-]).{4,}$/";
         //user names must have a capital letter, a lowercase letter, a digit, and no special char or spaces
 
-    $reg_journal_title = "/^([A-Za-z0-9]){4,}\w+$/"
-        //journal title should include only letters and digits and must have a length of at least 4
+    $reg_journal_title = "/^([A-Za-z0-9 ]){4,20}$/";
+        //journal title should include only letters and digits and must have a length of at least 4 and at most 20
+
+    $reg_file = "/^\S+$/";
+        //files uploaded must not have any spaces in the name.
 
 ?>

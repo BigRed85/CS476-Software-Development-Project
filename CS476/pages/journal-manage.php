@@ -39,6 +39,15 @@
                     - if is set to 0 this indicats that you wish to un-archive a journal
                 journal_id=(int)
                     - the journal id of the journal that you wish to edit
+
+        to delete a journal: 
+            GET variables:
+                delete=1
+                    - if is set to 1 this indicated that you whish to delete a journal
+                journal_id=(int)
+                    - the journal id of the journal that you whish to delete.
+
+            WARNING this has not been implemented!!!!!
     */
 
     require_once '../validator.php';
@@ -64,10 +73,7 @@
     ///add contributor
     if (isset($_GET["add"]))
     {
-        if($controller->add_contributor($_GET["journal_id"], $_GET["add"]) == false)
-            $errormsg = "ERROR: could not add contributor";
-        else
-            $errormsg = "OK";
+        $errormsg = $controller->add_contributor($_GET["journal_id"], $_GET["add"]);
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();
@@ -102,6 +108,14 @@
             $errormsg = "ERROR: could not make read write";
         else
             $errormsg = "OK";
+        $view->load_error($errormsg);
+        $view->return_error_msg();
+        exit();
+    }
+
+    if(isset($_GET["delete"]) && $_GET["delete"] == 1)
+    {
+        $errormsg = "this has not been implemented!";
         $view->load_error($errormsg);
         $view->return_error_msg();
         exit();

@@ -1,6 +1,9 @@
+//this is the user side script for the login and signup screens.
+
 var regex_email = /^\w+@\w+\.[a-zA-Z]{2,3}$/;
 var regex_pass = /^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+={}:;'<,>.?~-]).{8,}$/;
 var regex_name = /^(?=.*[\d])(?=.*[a-z])(?=.*[A-Z])(?!.*[!@#$%^&*()_+={}:;'<,>.?~-]).{4,}$/;
+var regex_file = /^\S+$/;
 
 window.addEventListener("load", init);
 function init()
@@ -163,6 +166,13 @@ function SignupValidate(event)
             if (elements[i].value == "")
             {
                 err_msg[i].textContent = "Avatar cannot be empty!";
+                elements[i].classList.add("red_border");
+                isValid = false;
+            }
+
+            if (regex_file.test(elements[i].value) === false)
+            {
+                err_msg[i].textContent = "File name cannot have spaces!";
                 elements[i].classList.add("red_border");
                 isValid = false;
             }

@@ -29,7 +29,16 @@
 
         //loads an error message into the view
         function load_error($errormsg) {
-            $this->errormsg = $errormsg;
+            if ($errormsg === "" || $errormsg === "OK")
+            {
+                $array["OK"] = $errormsg;
+            }
+            else
+            {
+                $array["ERROR"] = $errormsg;
+            }
+            
+            $this->errormsg = json_encode($array);
         }
 
         //returns the error message to the client

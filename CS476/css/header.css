@@ -4,7 +4,7 @@ header{
     grid-column-end: 3;
     background-color:seagreen;
     display: grid;
-    grid-template-columns: 20% 5fr 2fr auto auto;
+    grid-template-columns: 5fr 5fr 2fr auto auto;
     grid-template-rows: 1fr 1fr;
     column-gap: 5px;
     justify-items: center;
@@ -13,10 +13,16 @@ header{
     border-bottom-width: 2px;
     border-bottom-color: darkgrey;
     height: 10vh;
+    min-height: 4em;
 }
 header img{
     grid-row-start: 1;
     grid-row-end: 3;
+}
+
+header p img{
+    height: 8vh;
+    min-height: 3em;   
 }
 
 header #watchl{
@@ -51,9 +57,11 @@ header #icon{
     grid-row-start: 1;
     grid-row-end: 3;
     justify-self: center;
+    height: 8vh;
+    min-height: 3em;
 }
 header #icon img{
-    height: 64px;
+    height: 3em;
 }
 
 header #user_name{
@@ -64,7 +72,7 @@ header #user_name{
 
 header .profile_picture{
     grid-column-start: 5;
-    height: 64px;
+    height: 8vh;
     margin: 4px;
 
 }

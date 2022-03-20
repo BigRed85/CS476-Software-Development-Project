@@ -46,22 +46,12 @@
         }
 
         function page_permission() {
-            if ($this->journal_info["user_id"] == $_SESSION["user_id"])
+            if ($this->validate->is_owner($_SESSION["user_id"], $this->journal_info["journal_id"]))
             {
                 return true;
             }
 
-            $cont_list = $this->model->get_contributor_list($journal_info["journal_id"]);
-
-            foreach ($cont_list as $row)
-            {
-                if ($row["user_id"] == $_SESSION["user_id"])
-                {
-                    return true;
-                }
-            } 
-
-            return false;
+            return $this->validate->is_contributor($_SESSION["user_id"], $this->journal_info["journal_id"]);
         }
 
         //determins if the current user can delete the entry
@@ -96,8 +86,7 @@
         }
 
 
-        function add_entry($type, $journal_id, $user_id)
-        {
+        function add_entry($type, $journal_id, $user_id) {
             //check add permisions
             if ($this->validate->is_owner($user_id, $journal_id) === false && 
                 $this->validate->is_contributor($user_id, $journal_id) === false)
@@ -192,10 +181,10 @@
                     $errorMsg = $this->edit_note($entry_id, $_POST["note"]);
                     break;
                 case 'photo':
-                    return "Error: cannot edit a photo!"; //there is no edit behavior for photos
+                    $error = "Error: cannot edit a photo!"; //there is no edit behavior for photos
                     break;
                 default:
-                    return "Error: must be a event or note!"; 
+                    $error = "Error: must be a event or note!"; 
                     break;
             }
 
@@ -211,6 +200,12 @@
             //validate the image file
             $valid = true;
             $errorMsg = "";
+
+            if ($this->validate->file_name($_FILES["photo"]["name"]) === false)
+            {
+                $errorMsg = $errorMsg . "Error: File namne must not have spaces!";
+                $valid = false;
+            }
 
             $target_dir = $GLOBALS['photos_directory'] . "$page_id/";
             $target_file = $target_dir . basename($_FILES["photo"]["name"]);

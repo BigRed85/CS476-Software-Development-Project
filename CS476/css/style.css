@@ -37,3 +37,7 @@ h1{
     visibility: hidden;
     position: absolute;
 }
+
+#content{
+    padding: 2%;
+}

@@ -1,0 +1,1 @@
+This is where the image files that are journal entries will be stored.

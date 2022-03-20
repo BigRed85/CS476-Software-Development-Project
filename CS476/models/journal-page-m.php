@@ -44,11 +44,10 @@
             return $to_return;
         }
 
-        //checks if a page exists in the given jouranl on the given day
+        // checks if a page exists in the given jouranl on the given day
         // returns false if no page exists
         // returns true if the page exists
-        function is_page($journal_id, $date)
-        {
+        function is_page($journal_id, $date) {
             $query = $this->db->prepare('SELECT * FROM CS476_journal_pages
                                         WHERE journal_id = ? AND page_date = ?');
             $query->bind_param("is", $journal_id, $date);
@@ -112,11 +111,13 @@
             }
 
             //load events 
-            $query = $this->db->prepare('SELECT *  
+            $query = $this->db->prepare('SELECT CS476_journal_entries.*, CS476_event_entries.*,  CS476_users.username, CS476_users.avatar 
                         FROM CS476_journal_entries
                         JOIN CS476_event_entries
-                        ON CS476_journal_entries.entry_id = CS476_event_entries.entry_id
-                        AND CS476_journal_entries.page_id = ?');
+                            ON CS476_journal_entries.entry_id = CS476_event_entries.entry_id
+                            AND CS476_journal_entries.page_id = ?
+                        JOIN CS476_users
+                            ON CS476_journal_entries.user_id = CS476_users.user_id');
             $query->bind_param("i", $page_id);
             $query->execute();
             $result = $query->get_result();
@@ -129,11 +130,13 @@
             $to_return['events'] = $events;
 
             //load notes
-            $query = $this->db->prepare('SELECT *  
+            $query = $this->db->prepare('SELECT CS476_journal_entries.*, CS476_note_entries.*,  CS476_users.username, CS476_users.avatar 
                         FROM CS476_journal_entries
                         JOIN CS476_note_entries
-                        ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
-                        AND CS476_journal_entries.page_id = ?');
+                            ON CS476_journal_entries.entry_id = CS476_note_entries.entry_id
+                            AND CS476_journal_entries.page_id = ?
+                        JOIN CS476_users
+                            ON CS476_journal_entries.user_id = CS476_users.user_id');
             $query->bind_param("i", $page_id);
             $query->execute();
             $result = $query->get_result();
@@ -146,11 +149,14 @@
             $to_return['notes'] = $notes;
 
             //load photos
-            $query = $this->db->prepare('SELECT *  
+            $query = $this->db->prepare('SELECT CS476_journal_entries.*, CS476_photo_entries.*,  CS476_users.username, CS476_users.avatar 
                         FROM CS476_journal_entries
                         JOIN CS476_photo_entries
-                        ON CS476_journal_entries.entry_id = CS476_photo_entries.entry_id
-                        AND CS476_journal_entries.page_id = ?');
+                            ON CS476_journal_entries.entry_id = CS476_photo_entries.entry_id
+                            AND CS476_journal_entries.page_id = ?
+                        JOIN CS476_users
+                            ON CS476_journal_entries.user_id = CS476_users.user_id');
+            
             $query->bind_param("i", $page_id);
             $query->execute();
             $result = $query->get_result();

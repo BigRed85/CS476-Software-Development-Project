@@ -10,13 +10,10 @@ window.addEventListener("load", init);
 function init(){
     loadMonth();
 
-    document.getElementById("cal_month_back").onclick = loadPrevMonth;
-    document.getElementById("cal_month_forward").onclick = loadNextMonth;
+    //!!!the controller now deals with these events
+    //document.getElementById("cal_month_back").onclick = loadPrevMonth;
+    //document.getElementById("cal_month_forward").onclick = loadNextMonth;
 
-}
-
-function setUpMonthEvents() {
-    //set up click events
 }
 
 function loadPrevMonth(event) {
@@ -64,6 +61,4 @@ function loadMonth() {
 
         document.getElementById("cal_month").appendChild(newDay.day);
     }
-
-    setUpMonthEvents();
 }

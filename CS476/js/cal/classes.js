@@ -8,7 +8,19 @@ class Day {
 
         this.day.appendChild(document.createElement("a"));//day number
         this.day.lastChild.textContent = date;
-        this.day.id = year + '-' + (month + 1) + '-' + (date);
+
+        month = month + 1;
+        if (month < 10)
+        {
+            month = '0' + month;
+        }
+
+        if (date < 10)
+        {
+            date = '0' + date;
+        }
+
+        this.day.id = year + '-' + month + '-' + (date);
 
     }
 }

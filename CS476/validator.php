@@ -1,4 +1,6 @@
 <?php
+    //this is a module containing a class called a validator. 
+    //it will be used by the server side controllers to preform validation on user input. 
     require_once 'globals.php';
     require_once 'dbinfo.php';
 
@@ -10,12 +12,14 @@
         private $reg_sl;
         private $reg_journal_title;
         Private $db;
+        private $reg_file;
 
         function __construct($stringLength = 10) {
             $this->reg_email = $GLOBALS["reg_email"];
             $this->reg_pass = $GLOBALS["reg_pass"];
             $this->reg_name = $GLOBALS["reg_name"];
             $this->reg_journal_title = $GLOBALS["reg_journal_title"];
+            $this->reg_file = $GLOBALS["reg_file"];
 
             $this->reg_sl =  "/^[ -~]{1,$stringLength}$/";
 
@@ -155,6 +159,15 @@
         function journal_title($journal_title) {
             $match = preg_match($this->reg_journal_title, $journal_title);
             if ($journal_title == null || $journal_title == "" || $match == false) 
+            {
+                return false;
+            }
+            return true;
+        }
+
+        function file_name($file_name) {
+            $match = preg_match($this->reg_file, $file_name);
+            if ($file_name == null || $file_name == "" || $match == false) 
             {
                 return false;
             }

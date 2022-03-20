@@ -1,0 +1,9 @@
+#To-Do-Header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-content: center;
+}
+
+#To-Do-Header button{
+    max-width: 50%;
+}

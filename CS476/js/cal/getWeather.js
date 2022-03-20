@@ -6,7 +6,7 @@ let apis = {
             console.log(apis.currentWeather.api + city +
             apis.currentWeather.parameters)
             return apis.currentWeather.api + city +
-                   apis.currentWeather.parameters
+                   apis.currentWeather.parameters;
         }
     }
 };
@@ -14,20 +14,19 @@ function getCurrentLoc() {
     return new Promise((resolve, reject) =>  navigator.geolocation
                                              .getCurrentPosition(resolve, reject))
 }
+
+//THIS IS FOR GEOLOCATE
 function getCurrentCity(location) {
     const lat = location.coords.latitude;
     const lon = location.coords.longitude;
     return fetch(apis.currentWeather.url(lat, lon))
         .then(response => response.json());
-        //.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-        //.then(data => console.log(data));
         
 }
 
+//look for city only
 function getWeatherCity(city) {
     return fetch(apis.currentWeather.url(city))
         .then(response => response.json());
 }
 
-//getCurrentLoc()
-//.then( coords => getCurrentCity(coords))

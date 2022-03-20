@@ -16,7 +16,7 @@
             //check if current user own the journal
             if ($this->validate->is_owner($_SESSION["user_id"], $journal_id) == false)
             {
-                return false;
+                return "not journal owner";
             }
 
             //add the selected user to the contributor list

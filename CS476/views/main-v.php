@@ -9,7 +9,8 @@
         }
 
         function DisplayPage() {
-
+            $avatar = $_SESSION["avatar"];
+            $uname = $_SESSION["username"];
             include($this->html_path);
         }
     }

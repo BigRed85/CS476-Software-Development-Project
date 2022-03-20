@@ -1,3 +1,6 @@
+--Note many of these tables were not used in the final product 
+--of note the tools, plants, seeds, expenses, and reminders tables were not fully implemented.
+
 DROP TABLE IF EXISTS CS476_contributors;
 DROP TABLE IF EXISTS CS476_reminders;
 DROP TABLE IF EXISTS CS476_expenses;
@@ -68,7 +71,8 @@ CREATE TABLE CS476_journal_entries (
     entry_type ENUM('event', 'note', 'photo'),
     entry_time DATETIME NOT NULL,
     PRIMARY KEY(entry_id),
-    FOREIGN KEY(page_id) REFERENCES CS476_journal_pages(page_id)
+    FOREIGN KEY(page_id) REFERENCES CS476_journal_pages(page_id),
+    FOREIGN KEY(user_id) REFERENCES CS476_users(user_id)
 );
 
 CREATE TABLE CS476_event_entries (

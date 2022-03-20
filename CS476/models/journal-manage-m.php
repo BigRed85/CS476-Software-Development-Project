@@ -28,7 +28,7 @@
             }
             else
             {
-                return false;
+                return "no user with that name";
             }
 
             $query = $this->db->prepare('INSERT INTO CS476_contributors (journal_id, user_id)
@@ -37,10 +37,10 @@
             
             if ($query->execute())
             {
-                return true;
+                return "OK";
             }
 
-            return false;
+            return "could not add that user";
         }
 
         //removes a contributor from a journal 

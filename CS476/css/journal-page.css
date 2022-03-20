@@ -1,0 +1,26 @@
+.journal_entry {
+    border: 2px solid black;
+    border-radius: 0.5em;
+    margin-block-end: 2%;
+    padding: 1%;
+    width: 25vw;
+}
+
+#journal-page-entries {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#page_header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#add_entry_button {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    height: 50%;
+    align-self: center;
+    justify-self: center;
+}

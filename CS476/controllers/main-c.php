@@ -95,15 +95,13 @@
             //validate the journal title.
             if ($this->validate->journal_title($title) === false) 
             {
-                echo("Error could not create journal: invalid title");
-                die();
+                return array("ERROR" => "Error could not create journal: invalid title");
             }
 
             if ($this->model->create_journal($title, $user_id) === false)
             {
                 //error
-                echo("Error could not create journal.");
-                die();
+                return array("ERROR" => "Error could not create journal.");
             }
 
             return $this->model->load_owned_journals($user_id);

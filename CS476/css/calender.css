@@ -17,7 +17,7 @@
 }
 
 
-.day{
+.day {
     text-align: center;
     color: #000000;
     height: 1.5em;  
@@ -31,4 +31,8 @@
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
+}
+
+.selected_day {
+    background-color: gold;
 }

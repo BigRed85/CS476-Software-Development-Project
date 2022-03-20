@@ -19,7 +19,7 @@
 
             //request user information
             //protect from sql injection
-            $query = $this->db->prepare('SELECT username, avatar, city, prov 
+            $query = $this->db->prepare('SELECT user_id, username, avatar, city, prov 
                         FROM CS476_users WHERE user_id = ?');
             $query->bind_param("i", $user_id);
             $query->execute();
@@ -81,7 +81,7 @@
         }
 
         function load_journal_contribute($user_id) {
-            $query = $this->db->prepare('SELECT *  
+            $query = $this->db->prepare('SELECT CS476_journals.*  
                         FROM CS476_journals
                         JOIN CS476_contributors
                         ON CS476_journals.journal_id = CS476_contributors.journal_id
@@ -154,7 +154,7 @@
         //load all contributors to the given journal
         function load_journal_management($journal_id) {
             //get the user name from by joining to the contributor list 
-            $query = $this->db->prepare('SELECT CS476_users.username, CS476_users.avatar  
+            $query = $this->db->prepare('SELECT CS476_users.username, CS476_users.avatar, CS476_users.user_id
                         FROM CS476_users
                         JOIN CS476_contributors
                         ON CS476_users.user_id = CS476_contributors.user_id
